@@ -1,0 +1,2137 @@
+#####Testes Biomassa
+######para saber como escrever expressões 
+######matemáticas no R dentro da função
+######expression ()
+######use essa função >>>> demo(plotmath)
+######
+setwd("C:/Users/Pedro/Dropbox/Mestrado/Dados/Biomassa")
+#
+#install.packages ("BIOMASS", dependencies = TRUE)
+library ("BIOMASS")
+cv<-function(x){coef<-sd(x)/mean(x)*100 #função para acoeficiênte de variação
+return(coef)}
+
+dir()
+
+
+dads.bio.cj =  read.table ("BIOMASSA cj.txt", header = TRUE,
+ sep = "\t", row.names=1, dec = ",")
+
+dads.bio.ba =  read.table ("BIOMASSA Ba.txt" , header = TRUE,
+ sep = "\t", row.names=1, dec = ",")
+
+dads.bio.bc =  read.table ("BIOMASSA Bc.txt" , header = TRUE,
+ sep = "\t", row.names=1,dec = ",")
+
+dads.bio.it =  read.table ("BIOMASSA It.txt" , header = TRUE,
+ sep = "\t", row.names=1, dec = ",")
+
+
+dads.bio.fb =  read.table ("BIOMASSA fbD.txt" , header = TRUE,
+ sep = "\t", row.names=1, dec = ",")
+
+dads.bio.fsf =  read.table ("BIOMASSA fsfD.txt" , header = TRUE,
+ sep = "\t", row.names=1, dec = ",")
+
+dads.bio.bp =  read.table ("BIOMASSA Bp.txt" , header = TRUE,
+ sep = "\t", row.names=1, dec = ",")
+
+dir()
+c=100
+#head(dads.bio.ba)
+#length(dads.bio.ba$Alt)
+#length(dads.bio.ba$DAP)
+
+####CALCULAR DAP A PARTIR DE PAP OU CAP######
+#################IMPORTANTE##################
+dads.bio.ba$DAP= c(dads.bio.ba$D)*c
+dads.bio.bc$DAP= c(dads.bio.bc$D)*c
+dads.bio.it$DAP= c(dads.bio.it$D)*c
+dads.bio.cj$DAP= c(dads.bio.cj$D)*c
+dads.bio.fb$DAP= c(dads.bio.fb$D)*c
+dads.bio.fsf$DAP= c(dads.bio.fsf$D)*c
+dads.bio.bp$DAP= c(dads.bio.bp$D)*c
+
+############################################################
+############################################################
+############################################################
+############################################################
+#####################CAMPOS DO JORDÃO#######################
+
+#############
+###Limpeza dados
+#############
+dads.arau.cj<- dads.bio.cj[dads.bio.cj$Gen=="Araucaria",]#separa araucária
+dads.podo.cj<- dads.bio.cj[dads.bio.cj$Gen=="Podocarpus",]#separa podocarpus
+dads.gim.cj=rbind (dads.arau.cj,dads.podo.cj)
+dads.ang.cj<- dads.bio.cj[dads.bio.cj$Gen!="Araucaria",]#Retirand arauc
+dads.ang.cj<- dads.ang.cj[dads.ang.cj$Gen!="Podocarpus",]#retirando podo
+dads.ang.cj<- dads.ang.cj[dads.ang.cj$Gen!="Dicksonia",]#retirando podo
+dads.ang.cj<- dads.ang.cj[dads.ang.cj$Gen!="Cyathea",]#retirando podo
+
+
+#############################################################
+##########################classes DAP########################
+
+
+clas_gim_cj.10<-dads.gim.cj [dads.gim.cj$DAP<10,]
+g.smal=length(clas_gim_cj.10$DAP)
+clas_gim_cj.10.30<-dads.gim.cj [dads.gim.cj$DAP>=10 & dads.gim.cj$DAP<30,]
+g.med=length(clas_gim_cj.10.30$DAP)
+clas_gim_cj.30.50<-dads.gim.cj [dads.gim.cj$DAP>=30 & dads.gim.cj$DAP<50,]
+g.lar=length(clas_gim_cj.30.50$DAP)
+clas_gim_cj.50<-dads.gim.cj [dads.gim.cj$DAP>=50,]
+g.x.larg=length(clas_gim_cj.50$DAP)
+
+clas_ang_cj.10<-dads.ang.cj [dads.ang.cj$DAP<10,]
+smal=length(clas_ang_cj.10$DAP)
+clas_ang_cj.10.30<-dads.ang.cj [dads.ang.cj$DAP>=10 & dads.ang.cj$DAP<30,]
+med=length(clas_ang_cj.10.30$DAP)
+clas_ang_cj.30.50<-dads.ang.cj [dads.ang.cj$DAP>=30 & dads.ang.cj$DAP<50,]
+lar=length(clas_ang_cj.30.50$DAP)
+clas_ang_cj.50<-dads.ang.cj [dads.ang.cj$DAP>=50,]
+x.lar=length(clas_ang_cj.50$DAP)
+s.a=sum(smal,med,lar,x.lar)
+s.g=sum(g.smal,g.med,g.lar,g.x.larg)
+p.a=(c(smal,med,lar,x.lar)/s.a)*100
+p.g=(c(g.smal,g.med,g.lar,g.x.larg)/s.g)*100
+a.b.a=sum(dads.ang.cj$DAP)
+a.b.g=sum(dads.gim.cj$DAP)
+(c(a.b.a,a.b.g)/sum(a.b.a,a.b.g))*100
+
+############################################################
+############################################################
+############################################################
+##Est.Altura
+#Ang
+#weibull
+a=27.188
+b=0.091
+c.1=0.738
+D.1=dads.ang.cj$DAP
+x=dads.ang.cj$DAP
+dads.ang.cj$Alt.E= a*(1-exp(-b*(D.1^c.1)))
+
+#cor (dads.ang.cj$Alt.E,dads.ang.cj$Alt)
+#cv (dads.ang.cj$Alt.E)
+#cv (dads.ang.cj$Alt)
+
+###
+###
+#Gim
+a.g=25.9889
+b.g=19.9290
+g.D.1=dads.gim.cj$DAP
+dads.gim.cj$Alt.E = (1.3+a.g*exp(-(b.g/g.D.1)))
+
+#cor(dads.gim.cj$Alt.E,dads.gim.cj$Alt)
+#cv (dads.gim.cj$Alt.E)
+#cv(dads.gim.cj$Alt)
+
+############################################################
+############################################################
+############################################################
+##Densidade
+
+Dens.cj= getWoodDensity(genus=dads.ang.cj$Gen, 
+		species=dads.ang.cj$Spp)
+
+dads.ang.cj$DensM <- Dens.cj$meanWD
+dads.ang.cj$Lvl.D <- Dens.cj$levelWD
+
+write.table (dads.ang.cj,file="dads.ang.cj.csv", dec=",",col.names=TRUE)#função exporta a tabela
+
+
+dads.ang.cj =  read.table ("dens.cj.txt", header = TRUE,
+ sep = "\t", row.names=1, dec = ",")
+
+#head (dads.ang.cj )
+Dens.cj.2= getWoodDensity(genus=dads.gim.cj$Gen, 
+		species=dads.gim.cj$Spp)
+#head (Dens.cj.2)
+#tail (Dens.cj.2)
+dads.gim.cj$DensM <- Dens.cj.2$meanWD
+dads.gim.cj$Lvl.D <- Dens.cj.2$levelWD
+#tail (Dens.cj.2)
+
+
+
+############################################################
+############################################################
+############################################################
+##Biomassa
+
+
+##Gim
+x=0.4141 #Souza e Longhi
+a= 111.7988
+b= -15.5317
+c.2= 0.8544
+d = 0.0180
+g.D.1= c(dads.gim.cj$DAP)
+g.H.1=c(dads.gim.cj$Alt)
+dads.gim.cj$biom= (x*(a+b*c(g.D.1)+c.2*c(g.D.1^2)+d*((c(g.D.1^2))*g.H.1)))
+
+##Ang
+
+dads.ang.cj$biom= (computeAGB(D=dads.ang.cj$DAP, 
+			WD=dads.ang.cj$DensM,
+			H=dads.ang.cj$Alt.E))*1000
+head (dads.gim.cj)
+
+bio.cj =rbind (dads.ang.cj,dads.gim.cj)
+
+bio.temp.cj <- bio.cj [bio.cj$Distri == "Temperado",]
+bio.trop.cj <- bio.cj [bio.cj$Distri == "Tropical",]
+temp.cj=sum(bio.temp.cj$biom)
+trop.cj=sum(bio.trop.cj$biom)
+por.t.t.cj= (c(temp.cj,trop.cj)/sum(temp.cj,trop.cj)*100)
+
+
+######################
+######################
+######################
+######################
+######################DAP xBIO
+
+bio.ara <- bio.cj[bio.cj$Gen=="Araucaria",]
+bio.pod <- bio.cj [bio.cj$Gen == "Podocarpus",]
+bio.gim.cj=rbind (bio.ara,bio.pod)
+bio.ang.cj <-bio.cj[bio.cj$Gen!="Araucaria",]
+bio.ang.cj <-bio.ang.cj[bio.ang.cj$Gen!="Podocarpus",]
+#head (bio.ang.cj)
+
+b.clas_gim_cj.10<-bio.gim.cj [bio.gim.cj$DAP<10,]
+b.g.smal=sum(b.clas_gim_cj.10$biom)
+b.clas_gim_cj.10.30<-bio.gim.cj [bio.gim.cj$DAP>=10 & bio.gim.cj$DAP<30,]
+b.g.med=sum(b.clas_gim_cj.10.30$biom)
+b.clas_gim_cj.30.50<-bio.gim.cj [bio.gim.cj$DAP>=30 & bio.gim.cj$DAP<50,]
+b.g.lar=sum(b.clas_gim_cj.30.50$biom)
+b.clas_gim_cj.50<-bio.gim.cj [bio.gim.cj$DAP>=50,]
+b.g.x.larg=sum(b.clas_gim_cj.50$biom)
+
+b.clas_ang_cj.10<-bio.ang.cj [bio.ang.cj$DAP<10,]
+b.smal=sum(b.clas_ang_cj.10$biom)
+b.clas_ang_cj.10.30<-bio.ang.cj [bio.ang.cj$DAP>=10 & bio.ang.cj$DAP<30,]
+b.med=sum(b.clas_ang_cj.10.30$biom)
+b.clas_ang_cj.30.50<-bio.ang.cj [bio.ang.cj$DAP>=30 & bio.ang.cj$DAP<50,]
+b.lar=sum(b.clas_ang_cj.30.50$biom)
+b.clas_ang_cj.50<-bio.ang.cj [bio.ang.cj$DAP>=50,]
+b.x.lar=sum(b.clas_ang_cj.50$biom)
+
+
+b.s.a=sum(bio.ang.cj$biom)
+b.s.g=sum(bio.gim.cj$biom)
+b.p.a=(c(b.smal,b.med,b.lar,b.x.lar)/b.s.a)*100
+b.p.g=(c(b.g.smal,b.g.med,b.g.lar,b.g.x.larg)/b.s.g)*100
+
+
+
+############################################################
+############################################################
+############################################################
+############################################################
+#####################BANANAL################################
+
+#############
+###Limpeza dados
+#############
+dads.gim.ba<- dads.bio.ba[dads.bio.ba$Gen=="Araucaria",]#separa araucária
+dads.ang.ba<- dads.bio.ba[dads.bio.ba$Gen!="Araucaria",]#Retirand arauc
+dads.ang.ba<- dads.ang.ba[dads.ang.ba$Gen!="Cyathea",]#retirando podo
+dads.ang.ba<- dads.ang.ba[dads.ang.ba$Gen!="Euterpe",]#retirando podo
+dads.ang.ba<- dads.ang.ba[dads.ang.ba$Gen!="Syagrus",]#retirando podo
+dads.eut <- dads.bio.ba[dads.bio.ba$Gen=="Euterpe",]#separa araucária
+dads.sya <- dads.bio.ba[dads.bio.ba$Gen=="Syagrus",]#separa araucária
+dads.palm.ba= rbind(dads.eut,dads.sya)
+#head (dads.palm.ba)
+#tail (dads.ang.ba$DAP)
+#tail (dads.gim.ba) 
+#head (dads.ang.ba)
+#############################################################
+##########################classes DAP########################
+
+
+clas_gim_ba.10<-dads.gim.ba [dads.gim.ba$DAP<10,]
+g.smal.2=length(clas_gim_ba.10$DAP)
+clas_gim_ba.10.30<-dads.gim.ba [dads.gim.ba$DAP>=10 & dads.gim.ba$DAP<30,]
+g.med.2=length(clas_gim_ba.10.30$DAP)
+clas_gim_ba.30.50<-dads.gim.ba [dads.gim.ba$DAP>=30 & dads.gim.ba$DAP<50,]
+g.lar.2=length(clas_gim_ba.30.50$DAP)
+clas_gim_ba.50<-dads.gim.ba [dads.gim.ba$DAP>=50,]
+g.x.larg.2=length(clas_gim_ba.50$DAP)
+
+
+clas_ang_ba.10<-dads.ang.ba [dads.ang.ba$DAP<10,]
+smal.2=length(clas_ang_ba.10$DAP)
+clas_ang_ba.10.30<-dads.ang.ba [dads.ang.ba$DAP>=10 & dads.ang.ba$DAP<30,]
+med.2=length(clas_ang_ba.10.30$DAP)
+clas_ang_ba.30.50<-dads.ang.ba [dads.ang.ba$DAP>=30 & dads.ang.ba$DAP<50,]
+lar.2=length(clas_ang_ba.30.50$DAP)
+clas_ang_ba.50<-dads.ang.ba [dads.ang.ba$DAP>=50,]
+x.lar.2=length(clas_ang_ba.50$DAP)
+s.a.2=sum(smal.2,med.2,lar.2,x.lar.2)
+s.g.2=sum(g.smal.2,g.med.2,g.lar.2,g.x.larg.2)
+p.a.2=(c(smal.2,med.2,lar.2,x.lar.2)/s.a.2)*100
+p.g.2=(c(g.smal.2,g.med.2,g.lar.2,g.x.larg.2)/s.g.2)*100
+a.b.a.2=sum(dads.ang.ba$DAP)
+a.b.g.2=sum(dads.gim.ba$DAP)
+(c(a.b.a.2,a.b.g.2)/sum(a.b.a.2,a.b.g.2))*100
+
+############################################################
+############################################################
+############################################################
+##Est.Altura
+#Ang
+a=27.188
+b=0.091
+c.1=0.738
+D.2=dads.ang.ba$DAP
+dads.ang.ba$Alt.E= a*(1-exp(-b*(D.2^c.1)))
+
+#cor (dads.ang.ba$Alt,dads.ang.ba$DAP)
+#head (dads.ang.ba)
+#cv (dads.ang.ba$Alt.E)
+#cv (dads.ang.ba$Alt)
+
+#palm
+a=27.188
+b=0.091
+c.1=0.738
+D.2.2=dads.palm.ba$DAP
+dads.palm.ba$Alt.E= a*(1-exp(-b*(D.2.2^c.1)))
+#range (dads.palm.ba$Alt)
+#cv(dads.palm.ba$Alt)
+#head (dads.palm.ba)
+###
+###
+#Gim
+
+a.g=25.9889
+b.g=19.9290
+g.D.2=dads.gim.ba$DAP
+dads.gim.ba$Alt.E = (1.3+a.g*exp(-(b.g/g.D.2)))
+
+#cor(dads.gim.ba$Alt.E,dads.gim.ba$Alt)
+#cv (dads.gim.ba$Alt.E)
+#cv(dads.gim.ba$Alt)
+
+############################################################
+############################################################
+############################################################
+##Densidade
+
+Dens.ba= getWoodDensity(genus=dads.ang.ba$Gen, 
+		species=dads.ang.ba$Spp)
+dads.ang.ba$DensM <- Dens.ba$meanWD
+dads.ang.ba$Lvl.D <- Dens.ba$levelWD
+head (dads.ang.ba)
+
+write.table (dads.ang.ba,file="dads.ang.ba.csv", dec=",",col.names=TRUE)#função exporta a tabela
+dads.ang.ba =  read.table ("dens.ba.txt", header = TRUE,
+ sep = "\t", row.names=1, dec = ",")
+
+
+Dens.ba.3= getWoodDensity(genus=dads.palm.ba$Gen, 
+		species=dads.palm.ba$Spp)
+dads.palm.ba$DensM <- Dens.ba.3$meanWD
+dads.palm.ba$Lvl.D <- Dens.ba.3$levelWD
+
+write.table (dads.palm.ba,file="dads.palm.ba.csv", dec=",",col.names=TRUE)#função exporta a tabela
+dads.palm.ba =  read.table ("dens.palm.ba.txt", header = TRUE,
+ sep = "\t", row.names=1, dec = ",")
+
+#tail(dads.palm.ba)
+Dens.ba.2= getWoodDensity(genus=dads.gim.ba$Gen, 
+		species=dads.gim.ba$Spp)
+
+dads.gim.ba$DensM <- Dens.ba.2$meanWD
+dads.gim.ba$Lvl.D <- Dens.ba.2$levelWD
+#tail (Dens.ba.2)
+
+
+
+############################################################
+############################################################
+############################################################
+##Biomassa
+
+
+##Gim
+x=0.4141 #Souza e Longhi
+a= 111.7988
+b= -15.5317
+c.2= 0.8544
+d = 0.0180
+g.D.2= c(dads.gim.ba$DAP)
+g.H.2=c(dads.gim.ba$Alt.E)
+dads.gim.ba$biom= (x*(a+b*c(g.D.2)+c.2*c(g.D.2^2)+d*((c(g.D.2^2))*g.H.2)))
+
+
+##Ang
+
+dads.ang.ba$biom= (computeAGB(D=dads.ang.ba$DAP, 
+			WD=dads.ang.ba$DensM,
+			H=dads.ang.ba$Alt))*1000
+
+
+
+## Palm
+a.p= -3.3488
+b.p= 2.7483
+b.p1=0.55512
+D.p=dads.palm.ba$DAP
+H.p=dads.palm.ba$Alt.E
+
+dads.palm.ba$biom = exp(a.p+b.p*log(D.p))
+#head (dads.gim.ba)
+
+
+bio.ba =rbind (dads.ang.ba,dads.gim.ba, dads.palm.ba)
+#head (bio.ba)
+#head (bio.cj)
+bio.temp.ba <- bio.ba [bio.ba$Distri == "Temperado",]
+bio.trop.ba <- bio.ba [bio.ba$Distri == "Tropical",]
+temp.ba=sum(bio.temp.ba$biom)
+trop.ba=sum(bio.trop.ba$biom)
+por.t.t.ba= (c(temp.ba,trop.ba)/sum(temp.ba,trop.ba)*100)
+#barplot (c(por.t.t.ba[1],por.t.t.ba[2]))
+
+#head (dads.ang.ba)
+#head (dads.palm.ba)
+#head (dads.gim.ba)
+
+
+######################
+######################
+######################
+######################
+######################DAP xBIO
+
+bio.gim.ba <- bio.ba[bio.ba$Gen=="Araucaria",]
+bio.ang.ba <-bio.ba[bio.ba$Gen!="Araucaria",]
+bio.ang.ba <-bio.ang.ba[bio.ang.ba$Gen!="Podocarpus",]
+#head (bio.ang.ba)
+#tail (bio.gim.ba)
+
+b.clas_gim_ba.10<-bio.gim.ba [bio.gim.ba$DAP<10,]
+b.g.smal.2=sum(b.clas_gim_ba.10$biom)
+b.clas_gim_ba.10.30<-bio.gim.ba [bio.gim.ba$DAP>=10 & bio.gim.ba$DAP<30,]
+b.g.med.2=sum(b.clas_gim_ba.10.30$biom)
+b.clas_gim_ba.30.50<-bio.gim.ba [bio.gim.ba$DAP>=30 & bio.gim.ba$DAP<50,]
+b.g.lar.2=sum(b.clas_gim_ba.30.50$biom)
+b.clas_gim_ba.50<-bio.gim.ba [bio.gim.ba$DAP>=50,]
+b.g.x.larg.2=sum(b.clas_gim_ba.50$biom)
+
+b.clas_ang_ba.10<-bio.ang.ba [bio.ang.ba$DAP<10,]
+b.smal.2=sum(b.clas_ang_ba.10$biom)
+b.clas_ang_ba.10.30<-bio.ang.ba [bio.ang.ba$DAP>=10 & bio.ang.ba$DAP<30,]
+b.med.2=sum(b.clas_ang_ba.10.30$biom)
+b.clas_ang_ba.30.50<-bio.ang.ba [bio.ang.ba$DAP>=30 & bio.ang.ba$DAP<50,]
+b.lar.2=sum(b.clas_ang_ba.30.50$biom)
+b.clas_ang_ba.50<-bio.ang.ba [bio.ang.ba$DAP>=50,]
+b.x.lar.2=sum(b.clas_ang_ba.50$biom)
+
+b.s.a.2=sum(bio.ang.ba$biom)
+
+b.s.g.2=sum(bio.gim.ba$biom)
+
+b.p.a.2=(c(b.smal.2,b.med.2,b.lar.2,b.x.lar.2)/b.s.a.2)*100
+
+b.p.g.2=(c(b.g.smal.2,b.g.med.2,b.g.lar.2,b.g.x.larg.2)/b.s.g.2)*100
+
+
+
+############################################################
+############################################################
+############################################################
+############################################################
+#####################BARRA DO CHAPÉU#######################
+
+#############
+###Limpeza dados
+#############
+dads.gim.bc<- dads.bio.bc[dads.bio.bc$Gen=="Araucaria",]#separa araucária
+
+dads.ang.bc<- dads.bio.bc[dads.bio.bc$Gen!="Araucaria",]#Retirand arauc
+dads.ang.bc<- dads.ang.bc[dads.ang.bc$Gen!="Syagrus",]#retirando podo
+
+dads.palm.bc <- dads.bio.bc[dads.bio.bc$Gen=="Syagrus",]#separa araucária
+
+dads.ang.bc<- dads.ang.bc[dads.ang.bc$Gen!="Dicksonia",]#retirando podo
+
+#head  (dads.palm.bc)
+
+#############################################################
+##########################classes DAP########################
+
+
+clas_gim_bc.10<-dads.gim.bc [dads.gim.bc$DAP<10,]
+g.smal.3=length(clas_gim_bc.10$DAP)
+clas_gim_bc.10.30<-dads.gim.bc [dads.gim.bc$DAP>=10 & dads.gim.bc$DAP<30,]
+g.med.3=length(clas_gim_bc.10.30$DAP)
+clas_gim_bc.30.50<-dads.gim.bc [dads.gim.bc$DAP>=30 & dads.gim.bc$DAP<50,]
+g.lar.3=length(clas_gim_bc.30.50$DAP)
+clas_gim_bc.50<-dads.gim.bc [dads.gim.bc$DAP>=50,]
+g.x.larg.3=length(clas_gim_bc.50$DAP)
+
+clas_ang_bc.10<-dads.ang.bc [dads.ang.bc$DAP<10,]
+smal.3=length(clas_ang_bc.10$DAP)
+clas_ang_bc.10.30<-dads.ang.bc [dads.ang.bc$DAP>=10 & dads.ang.bc$DAP<30,]
+med.3=length(clas_ang_bc.10.30$DAP)
+clas_ang_bc.30.50<-dads.ang.bc [dads.ang.bc$DAP>=30 & dads.ang.bc$DAP<50,]
+lar.3=length(clas_ang_bc.30.50$DAP)
+clas_ang_bc.50<-dads.ang.bc [dads.ang.bc$DAP>=50,]
+x.lar.3=length(clas_ang_bc.50$DAP)
+s.a.3=sum(smal.3,med.3,lar.3,x.lar.3)
+s.g.3=sum(g.smal.3,g.med.3,g.lar.3,g.x.larg.3)
+p.a.3=(c(smal.3,med.3,lar.3,x.lar.3)/s.a.3)*100
+p.g.3=(c(g.smal.3,g.med.3,g.lar.3,g.x.larg.3)/s.g.3)*100
+a.b.a.3=sum(dads.ang.bc$DAP)
+a.b.g.3=sum(dads.gim.bc$DAP)
+(c(a.b.a.3,a.b.g.3)/sum(a.b.a.3,a.b.g.3))*100
+
+############################################################
+############################################################
+############################################################
+##Est.Altura
+#Ang
+a=27.188
+b=0.091
+c.1=0.738
+D.3= dads.ang.bc$DAP
+dads.ang.bc$Alt.E= a*(1-exp(-b*(D.3^c.1)))
+
+#cor (dads.ang.bc$Alt.E,dads.ang.bc$Alt)
+#cv (dads.ang.bc$Alt.E)
+#cv (dads.ang.bc$Alt)
+
+#palm
+a=27.188
+b=0.091
+c.1=0.738
+D.3.3= dads.palm.bc$DAP
+dads.palm.bc$Alt.E= a*(1-exp(-b*(D.3.3^c.1)))
+#cor(dads.palm.bc$Alt.E,dads.palm.bc$Alt)
+#cv (dads.palm.bc$Alt.E)
+#cv(dads.palm.bc$Alt)
+#range (dads.palm.bc$DAP)
+###
+###
+#Gim
+a.g=25.9889
+b.g=19.9290
+g.D.3=dads.gim.bc$DAP
+dads.gim.bc$Alt.E = (1.3+a.g*exp(-(b.g/g.D.3)))
+
+#cor(dads.gim.bc$Alt.E,dads.gim.bc$Alt)
+#cv (dads.gim.bc$Alt.E)
+#cv(dads.gim.bc$Alt)
+
+############################################################
+############################################################
+############################################################
+##Densidade
+
+Dens.bc= getWoodDensity(genus=dads.ang.bc$Gen, 
+		species=dads.ang.bc$Spp)
+#head (dads.ang.bc)
+dads.ang.bc$DensM <- Dens.bc$meanWD
+dads.ang.bc$Lvl.D <- Dens.bc$levelWD
+write.table (dads.ang.bc,file="dads.ang.bc.csv", dec=",",col.names=TRUE)#função exporta a tabela
+dads.ang.bc =  read.table ("Dens.bc.txt" , header = TRUE,
+ sep = "\t", row.names=1,dec = ",")
+
+
+
+Dens.bc= getWoodDensity(genus=dads.palm.bc$Gen, 
+		species=dads.palm.bc$Spp)
+
+write.table (dads.palm.bc,file="dads.palm.bc.csv", dec=",",col.names=TRUE)#função exporta a tabela
+dads.palm.bc =  read.table ("Dens.palm.bc.txt" , header = TRUE,
+ sep = "\t", row.names=1,dec = ",")
+
+
+Dens.bc.2= getWoodDensity(genus=dads.gim.bc$Gen, 
+		species=dads.gim.bc$Spp)
+
+dads.gim.bc$DensM <- Dens.bc.2$meanWD
+dads.gim.bc$Lvl.D <- Dens.bc.2$levelWD
+#tail (Dens.bc.2)
+
+
+
+############################################################
+############################################################
+############################################################
+##Biomassa
+
+
+##Gim
+x=0.4141 #Souza e Longhi
+a= 111.7988
+b= -15.5317
+c.2= 0.8544
+d = 0.0180
+g.D.3= c(dads.gim.bc$DAP)
+g.H.3=c(dads.gim.bc$Alt)
+dads.gim.bc$biom= (x*(a+b*c(g.D.3)+c.2*c(g.D.3^2)+d*((c(g.D.3^2))*g.H.3)))
+
+
+##Ang
+
+dads.ang.bc$biom= (computeAGB(D=dads.ang.bc$DAP, 
+			WD=dads.ang.bc$DensM,
+			H=dads.ang.bc$Alt))*1000
+#head (dads.ang.bc)
+
+## Palm
+a.p= -3.3488
+b.p= 2.7483
+D.p.2=dads.palm.bc$DAP
+
+
+
+dads.palm.bc$biom =exp(a.p+b.p*log(D.p.2))
+#dads.palm.bc$biom =exp(a.p+b.p*log(D.p.2))
+sort (dads.palm.bc$biom , dec=TRUE)
+#head (dads.palm.bc)
+
+bio.bc =rbind (dads.ang.bc,dads.gim.bc,dads.palm.bc)
+
+bio.temp.bc <- bio.bc [bio.bc$Distri == "Temperado",]
+bio.trop.bc <- bio.bc [bio.bc$Distri == "Tropical",]
+temp.bc=sum(bio.temp.bc$biom)
+trop.bc=sum(bio.trop.bc$biom)
+por.t.t.bc= (c(temp.bc,trop.bc)/sum(temp.bc,trop.bc)*100)
+
+
+
+######################
+######################
+######################
+######################
+######################DAP xBIO
+
+bio.gim.bc <- bio.bc[bio.bc$Gen=="Araucaria",]
+bio.ang.bc <-bio.bc[bio.bc$Gen!="Araucaria",]
+bio.ang.bc <-bio.ang.bc[bio.ang.bc$Gen!="Podocarpus",]
+#head (bio.ang.bc)
+#tail (bio.gim.bc)
+
+b.clas_gim_bc.10<-bio.gim.bc [bio.gim.bc$DAP<10,]
+b.g.smal.3=sum(b.clas_gim_bc.10$biom)
+b.clas_gim_bc.10.30<-bio.gim.bc [bio.gim.bc$DAP>=10 & bio.gim.bc$DAP<30,]
+b.g.med.3=sum(b.clas_gim_bc.10.30$biom)
+b.clas_gim_bc.30.50<-bio.gim.bc [bio.gim.bc$DAP>=30 & bio.gim.bc$DAP<50,]
+b.g.lar.3=sum(b.clas_gim_bc.30.50$biom)
+b.clas_gim_bc.50<-bio.gim.bc [bio.gim.bc$DAP>=50,]
+b.g.x.larg.3=sum(b.clas_gim_bc.50$biom)
+
+b.clas_ang_bc.10<-bio.ang.bc [bio.ang.bc$DAP<10,]
+b.smal.3=sum(b.clas_ang_bc.10$biom)
+b.clas_ang_bc.10.30<-bio.ang.bc [bio.ang.bc$DAP>=10 & bio.ang.bc$DAP<30,]
+b.med.3=sum(b.clas_ang_bc.10.30$biom)
+b.clas_ang_bc.30.50<-bio.ang.bc [bio.ang.bc$DAP>=30 & bio.ang.bc$DAP<50,]
+b.lar.3=sum(b.clas_ang_bc.30.50$biom)
+b.clas_ang_bc.50<-bio.ang.bc[bio.ang.bc$DAP>=50,]
+b.x.lar.3=sum(b.clas_ang_bc.50$biom)
+
+b.s.a.3=sum(bio.ang.bc$biom)
+
+b.s.g.3=sum(bio.gim.bc$biom)
+
+b.p.a.3=(c(b.smal.3,b.med.3,b.lar.3,b.x.lar.3)/b.s.a.3)*100
+
+b.p.g.3=(c(b.g.smal.3,b.g.med.3,b.g.lar.3,b.g.x.larg.3)/b.s.g.3)*100
+
+
+
+############################################################
+############################################################
+############################################################
+############################################################
+#####################ITABERÁ#######################
+
+#############
+###Limpeza dados
+#############
+dads.gim.it<- dads.bio.it[dads.bio.it$Gen=="Araucaria",]#separa araucária
+
+dads.ang.it<- dads.bio.it[dads.bio.it$Gen!="Araucaria",]#Retirand arauc
+dads.ang.it<- dads.ang.it[dads.ang.it$Gen!="Podocarpus",]#retirando podo
+dads.ang.it<- dads.ang.it[dads.ang.it$Gen!="Cyathea",]#retirando podo
+dads.ang.it <- dads.ang.it[dads.ang.it$Gen!="Euterpe",]#separa araucária
+dads.ang.it<- dads.ang.it[dads.ang.it$Gen!="Syagrus",]#separa araucária
+#View (dads.ang.it)
+dads.eut2 <- dads.bio.it[dads.bio.it$Gen=="Euterpe",]#separa araucária
+dads.sya2 <- dads.bio.it[dads.bio.it$Gen=="Syagrus",]#separa araucária
+dads.palm.it= rbind(dads.eut2,dads.sya2)
+
+
+#############################################################
+##########################classes DAP########################
+
+
+clas_gim_it.10<-dads.gim.it [dads.gim.it$DAP<10,]
+g.smal.4=length(clas_gim_it.10$DAP)
+clas_gim_it.10.30<-dads.gim.it [dads.gim.it$DAP>=10 & dads.gim.it$DAP<30,]
+g.med.4=length(clas_gim_it.10.30$DAP)
+clas_gim_it.30.50<-dads.gim.it [dads.gim.it$DAP>=30 & dads.gim.it$DAP<50,]
+g.lar.4=length(clas_gim_it.30.50$DAP)
+clas_gim_it.50<-dads.gim.it [dads.gim.it$DAP>=50,]
+g.x.larg.4=length(clas_gim_it.50$DAP)
+
+clas_ang_it.10<-dads.ang.it [dads.ang.it$DAP<10,]
+smal.4=length(clas_ang_it.10$DAP)
+clas_ang_it.10.30<-dads.ang.it [dads.ang.it$DAP>=10 & dads.ang.it$DAP<30,]
+med.4=length(clas_ang_it.10.30$DAP)
+clas_ang_it.30.50<-dads.ang.it [dads.ang.it$DAP>=30 & dads.ang.it$DAP<50,]
+lar.4=length(clas_ang_it.30.50$DAP)
+clas_ang_it.50<-dads.ang.it [dads.ang.it$DAP>=50,]
+x.lar.4=length(clas_ang_it.50$DAP)
+s.a.4=sum(smal.4,med.4,lar.4,x.lar.4)
+s.g.4=sum(g.smal.4,g.med.4,g.lar.4,g.x.larg.4)
+p.a.4=(c(smal.4,med.4,lar.4,x.lar.4)/s.a.4)*100
+p.g.4=(c(g.smal.4,g.med.4,g.lar.4,g.x.larg.4)/s.g.4)*100
+a.b.a.4=sum(dads.ang.it$DAP)
+a.b.g.4=sum(dads.gim.it$DAP)
+(c(a.b.a.4,a.b.g.4)/sum(a.b.a.4,a.b.g.4))*100
+
+############################################################
+############################################################
+############################################################
+##Est.Altura
+#Ang
+#weibull
+a=27.188
+b=0.091
+c.1=0.738
+D.4=dads.ang.it$DAP
+dads.ang.it$Alt.E= a*(1-exp(-b*(D.4^c.1)))
+
+
+a=27.188
+b=0.091
+c.1=0.738
+D.4.4=dads.palm.it$DAP
+dads.palm.it$Alt.E= a*(1-exp(-b*(D.4.4^c.1)))
+
+###
+###
+#Gim
+a.g=25.9889
+b.g=19.9290
+g.D.4=dads.gim.it$DAP
+dads.gim.it$Alt.E = (1.3+a.g*exp(-(b.g/g.D.4)))
+
+#cor(dads.gim.it$Alt.E,dads.gim.it$Alt)
+#cv (dads.gim.it$Alt.E)
+#cv(dads.gim.it$Alt)
+
+############################################################
+############################################################
+############################################################
+##Densidade
+
+Dens.it= getWoodDensity(genus=dads.ang.it$Gen, 
+		species=dads.ang.it$Spp)
+
+dads.ang.it$DensM <- Dens.it$meanWD
+dads.ang.it$Lvl.D <- Dens.it$levelWD
+write.table (dads.ang.it,file="dads.ang.it.csv", dec=",",col.names=TRUE)#função exporta a tabela
+dads.ang.it =  read.table ("Dens.it.txt" , header = TRUE,
+ sep = "\t", row.names=1,dec = ",")
+
+#head (dads.ang.it)
+
+Dens.it.3= getWoodDensity(genus=dads.palm.it$Gen, 
+		species=dads.palm.it$Spp)
+dads.palm.it$DensM <- Dens.it.3$meanWD
+dads.palm.it$Lvl.D <- Dens.it.3$levelWD
+
+write.table (dads.palm.it,file="dads.palm.it.csv", dec=",",col.names=TRUE)#função exporta a tabela
+dads.palm.it =  read.table ("Dens.palm.it.txt" , header = TRUE,
+ sep = "\t", row.names=1,dec = ",")
+
+
+
+#tail (dads.palm.it)
+
+
+Dens.it.2= getWoodDensity(genus=dads.gim.it$Gen, 
+		species=dads.gim.it$Spp)
+
+dads.gim.it$DensM <- Dens.it.2$meanWD
+dads.gim.it$Lvl.D <- Dens.it.2$levelWD
+#tail (Dens.it.2)
+
+
+
+############################################################
+############################################################
+############################################################
+##Biomassa
+
+
+##Gim
+x=0.4141 #Souza e Longhi
+a= 111.7988
+b= -15.5317
+c.2= 0.8544
+d = 0.0180
+g.D.4= c(dads.gim.it$DAP)
+g.H.4=c(dads.gim.it$Alt)
+dads.gim.it$biom= (x*(a+b*c(g.D.4)+c.2*c(g.D.4^2)+d*((c(g.D.4^2))*g.H.4)))
+
+sort (dads.gim.it$biom)
+##Ang
+
+dads.ang.it$biom= (computeAGB(D=dads.ang.it$DAP, 
+			WD=dads.ang.it$DensM,
+			H=dads.ang.it$Alt.E))*1000
+#head (sort (dads.ang.it$biom))
+##palm
+	
+a.p= -3.3488
+b.p= 2.7483
+D.p.3=dads.palm.it$DAP
+
+
+
+dads.palm.it$biom = exp(a.p+b.p*log(D.p.3))
+#head (sort(dads.palm.it$biom, dec=FALSE))
+#tail (sort(dads.palm.it$biom, dec=FALSE))
+
+#dads.palm.it$biom = exp(a.p+b.p*log(D.p.3))
+#head (sort(dads.palm.it$biom, dec=FALSE))
+#tail (sort(dads.palm.it$biom, dec=FALSE))
+
+
+#dads.palm.it$biom = log(a.p+b.p*log(D.p.3))
+#head (sort(dads.palm.it$biom, dec=FALSE))
+#tail (sort(dads.palm.it$biom, dec=FALSE))
+
+
+
+bio.it =rbind (dads.ang.it,dads.gim.it,dads.palm.it)
+
+bio.temp.it <- bio.it [bio.it$Distri == "Temperado",]
+bio.trop.it <- bio.it [bio.it$Distri == "Tropical",]
+temp.it=sum(bio.temp.it$biom)
+trop.it=sum(bio.trop.it$biom)
+por.t.t.it= (c(temp.it,trop.it)/sum(temp.it,trop.it)*100)
+#barplot (c(por.t.t.it[1],por.t.t.it[2]))
+
+
+#cv (bio.it$biom)
+
+
+
+######################
+######################
+######################DAP xBIO
+
+bio.gim.it <- bio.it[bio.it$Gen=="Araucaria",]
+bio.ang.it <-bio.it[bio.it$Gen!="Araucaria",]
+bio.ang.it <-bio.ang.it[bio.ang.it$Gen!="Podocarpus",]
+#head (bio.ang.it)
+#tail (bio.gim.it)
+
+b.clas_gim_it.10<-bio.gim.it [bio.gim.it$DAP<10,]
+b.g.smal.4=sum(b.clas_gim_it.10$biom)
+b.clas_gim_it.10.30<-bio.gim.it [bio.gim.it$DAP>=10 & bio.gim.it$DAP<30,]
+b.g.med.4=sum(b.clas_gim_it.10.30$biom)
+b.clas_gim_it.30.50<-bio.gim.it [bio.gim.it$DAP>=30 & bio.gim.it$DAP<50,]
+b.g.lar.4=sum(b.clas_gim_it.30.50$biom)
+b.clas_gim_it.50<-bio.gim.it [bio.gim.it$DAP>=50,]
+b.g.x.larg.4=sum(b.clas_gim_it.50$biom)
+
+b.clas_ang_it.10<-bio.ang.it [bio.ang.it$DAP<10,]
+b.smal.4=sum(b.clas_ang_it.10$biom)
+b.clas_ang_it.10.30<-bio.ang.it [bio.ang.it$DAP>=10 & bio.ang.it$DAP<30,]
+b.med.4=sum(b.clas_ang_it.10.30$biom)
+b.clas_ang_it.30.50<-bio.ang.it [bio.ang.it$DAP>=30 & bio.ang.it$DAP<50,]
+b.lar.4=sum(b.clas_ang_it.30.50$biom)
+b.clas_ang_it.50<-bio.ang.it[bio.ang.it$DAP>=50,]
+b.x.lar.4=sum(b.clas_ang_it.50$biom)
+
+b.s.a.4=sum(bio.ang.it$biom)
+
+b.s.g.4=sum(bio.gim.it$biom)
+
+b.p.a.4=(c(b.smal.4,b.med.4,b.lar.4,b.x.lar.4)/b.s.a.4)*100
+
+b.p.g.4=(c(b.g.smal.4,b.g.med.4,b.g.lar.4,b.g.x.larg.4)/b.s.g.4)*100
+
+
+
+############################################################
+############################################################
+############################################################
+############################################################
+###################DELFIM MOREIRA sÃO FRANCISCO#############
+
+#############
+###Limpeza dados
+#############
+dads.arau.fsf<- dads.bio.fsf[dads.bio.fsf$Gen=="Araucaria",]#separa araucária
+dads.podo.fsf<- dads.bio.fsf[dads.bio.fsf$Gen=="Podocarpus",]#separa podocarpus
+dads.gim.fsf=rbind (dads.arau.fsf,dads.podo.fsf)
+dads.ang.fsf<- dads.bio.fsf[dads.bio.fsf$Gen!="Araucaria",]#Retirand arauc
+dads.ang.fsf<- dads.ang.fsf[dads.ang.fsf$Gen!="Podocarpus",]#retirando podo
+dads.ang.fsf<- dads.ang.fsf[dads.ang.fsf$Gen!="Dicksonia",]#retirando podo
+dads.ang.fsf<- dads.ang.fsf[dads.ang.fsf$Gen!="Cyathea",]#retirando podo
+head (dads.gim.fsf)
+
+#############################################################
+##########################classes DAP########################
+
+
+clas_gim_fsf.10<-dads.gim.fsf [dads.gim.fsf$DAP<10,]
+g.smal.5=length(clas_gim_fsf.10$DAP)
+clas_gim_fsf.10.30<-dads.gim.fsf [dads.gim.fsf$DAP>=10 & dads.gim.fsf$DAP<30,]
+g.med.5=length(clas_gim_fsf.10.30$DAP)
+clas_gim_fsf.30.50<-dads.gim.fsf [dads.gim.fsf$DAP>=30 & dads.gim.fsf$DAP<50,]
+g.lar.5=length(clas_gim_fsf.30.50$DAP)
+clas_gim_fsf.50<-dads.gim.fsf [dads.gim.fsf$DAP>=50,]
+g.x.larg.5=length(clas_gim_fsf.50$DAP)
+
+clas_ang_fsf.10<-dads.ang.fsf [dads.ang.fsf$DAP<10,]
+smal.5=length(clas_ang_fsf.10$DAP)
+clas_ang_fsf.10.30<-dads.ang.fsf [dads.ang.fsf$DAP>=10 & dads.ang.fsf$DAP<30,]
+med.5=length(clas_ang_fsf.10.30$DAP)
+clas_ang_fsf.30.50<-dads.ang.fsf [dads.ang.fsf$DAP>=30 & dads.ang.fsf$DAP<50,]
+lar.5=length(clas_ang_fsf.30.50$DAP)
+clas_ang_fsf.50<-dads.ang.fsf [dads.ang.fsf$DAP>=50,]
+x.lar.5=length(clas_ang_fsf.50$DAP)
+s.a.5=sum(smal.5,med.5,lar.5,x.lar.5)
+s.g.5=sum(g.smal.5,g.med.5,g.lar.5,g.x.larg.5)
+p.a.5=(c(smal.5,med.5,lar.5,x.lar.5)/s.a.5)*100
+p.g.5=(c(g.smal.5,g.med.5,g.lar.5,g.x.larg.5)/s.g.5)*100
+a.b.a.5=sum(dads.ang.fsf$DAP)
+a.b.g.5=sum(dads.gim.fsf$DAP)
+(c(a.b.a.5,a.b.g.5)/sum(a.b.a.5,a.b.g.5))*100
+
+############################################################
+############################################################
+############################################################
+##Est.Altura
+#Ang
+#weibull
+a=27.188
+b=0.091
+c.1=0.738
+D.5=dads.ang.fsf$DAP
+x.5=dads.ang.fsf$DAP
+dads.ang.fsf$Alt.E= a*(1-exp(-b*(D.5^c.1)))
+
+#cor (dads.ang.fsf$Alt.E,dads.ang.fsf$Alt)
+#cv (dads.ang.fsf$Alt)
+#range (dads.ang.fsf$Alt.E)
+
+###
+###
+#Gim
+a.g=25.9889
+b.g=19.9290
+g.D.5=dads.gim.fsf$DAP
+dads.gim.fsf$Alt.E = (1.3+a.g*exp(-(b.g/g.D.5)))
+
+#cor(dads.gim.fsf$Alt.E,dads.gim.fsf$Alt)
+#cv (dads.gim.fsf$Alt.E)
+#cv(dads.gim.fsf$Alt)
+
+############################################################
+############################################################
+############################################################
+##Densidade
+
+Dens.fsf= getWoodDensity(genus=dads.ang.fsf$Gen, 
+		species=dads.ang.fsf$Spp)
+
+dads.ang.fsf$DensM <- Dens.fsf$meanWD
+dads.ang.fsf$Lvl.D <- Dens.fsf$levelWD
+write.table (dads.ang.fsf,file="dads.ang.fsf.csv", dec=",",col.names=TRUE)#função exporta a tabela
+dads.ang.fsf =  read.table ("Dens.fsf.txt" , header = TRUE,
+sep = "\t", row.names=1,dec = ",")
+
+#head (dads.ang.fsf)
+
+
+Dens.fsf.2= getWoodDensity(genus=dads.gim.fsf$Gen, 
+		species=dads.gim.fsf$Spp)
+
+dads.gim.fsf$DensM <- Dens.fsf.2$meanWD
+dads.gim.fsf$Lvl.D <- Dens.fsf.2$levelWD
+
+
+
+############################################################
+############################################################
+############################################################
+##Biomassa
+
+
+##Gim
+x=0.4141 #Souza e Longhi
+a= 111.7988
+b= -15.5317
+c.2= 0.8544
+d = 0.0180
+g.D.5= c(dads.gim.fsf$DAP)
+g.H.5=c(dads.gim.fsf$Alt.E)
+dads.gim.fsf$biom= (x*(a+b*c(g.D.5)+c.2*c(g.D.5^2)+d*((c(g.D.5^2))*g.H.5)))
+
+
+#summary (gim.biom)
+
+#head (dads.gim.fsf)
+sum (dads.gim.fsf$biom)
+##Ang
+
+dads.ang.fsf$biom= (computeAGB(D=dads.ang.fsf$DAP, 
+			WD=dads.ang.fsf$DensM,
+			H=dads.ang.fsf$Alt.E))*1000
+#head (dads.ang.fsf)
+
+
+bio.fsf =rbind (dads.ang.fsf,dads.gim.fsf)
+
+bio.temp.fsf <- bio.fsf [bio.fsf$Distri == "Temperado",]
+bio.trop.fsf <- bio.fsf [bio.fsf$Distri == "Tropical",]
+temp.fsf=sum(bio.temp.fsf$biom)
+trop.fsf=sum(bio.trop.fsf$biom)
+por.t.t.fsf=(c(temp.fsf,trop.fsf)/sum(trop.fsf,temp.fsf)*100)
+#barplot (c(por.t.t.fsf[1],por.t.t.fsf[2]))
+
+#sum (bio.temp.fsf$biom)
+#barplot (c(temp.fsf,trop.fsf))
+
+#tail (bio.temp.fsf, 70)
+#plot (bio.cj$Alt,bio.cj$biom)
+#cv (bio.cj$biom)
+
+
+######################
+######################
+######################DAP xBIO
+
+bio.ara.fsf <- bio.fsf[bio.fsf$Gen=="Araucaria",]
+bio.pod.fsf <- bio.fsf [bio.fsf$Gen == "Podocarpus",]
+bio.gim.fsf=rbind (bio.ara.fsf,bio.pod.fsf)
+bio.ang.fsf <-bio.fsf[bio.fsf$Gen!="Araucaria",]
+bio.ang.fsf <-bio.ang.fsf[bio.ang.fsf$Gen!="Podocarpus",]
+#head (bio.ang.cj)
+
+
+b.clas_gim_fsf.10<-bio.gim.fsf [bio.gim.fsf$DAP<10,]
+b.g.smal.5=sum(b.clas_gim_fsf.10$biom)
+b.clas_gim_fsf.10.30<-bio.gim.fsf [bio.gim.fsf$DAP>=10 & bio.gim.fsf$DAP<30,]
+b.g.med.5=sum(b.clas_gim_fsf.10.30$biom)
+b.clas_gim_fsf.30.50<-bio.gim.fsf [bio.gim.fsf$DAP>=30 & bio.gim.fsf$DAP<50,]
+b.g.lar.5=sum(b.clas_gim_fsf.30.50$biom)
+b.clas_gim_fsf.50<-bio.gim.fsf [bio.gim.fsf$DAP>=50,]
+b.g.x.larg.5=sum(b.clas_gim_fsf.50$biom)
+
+b.clas_ang_fsf.10<-bio.ang.fsf [bio.ang.fsf$DAP<10,]
+b.smal.5=sum(b.clas_ang_fsf.10$biom)
+b.clas_ang_fsf.10.30<-bio.ang.fsf [bio.ang.fsf$DAP>=10 & bio.ang.fsf$DAP<30,]
+b.med.5=sum(b.clas_ang_fsf.10.30$biom)
+b.clas_ang_fsf.30.50<-bio.ang.fsf [bio.ang.fsf$DAP>=30 & bio.ang.fsf$DAP<50,]
+b.lar.5=sum(b.clas_ang_fsf.30.50$biom)
+b.clas_ang_fsf.50<-bio.ang.fsf[bio.ang.fsf$DAP>=50,]
+b.x.lar.5=sum(b.clas_ang_fsf.50$biom)
+
+b.s.a.5=sum(bio.ang.fsf$biom)
+
+b.s.g.5=sum(bio.gim.fsf$biom)
+
+b.p.a.5=(c(b.smal.5,b.med.5,b.lar.5,b.x.lar.5)/b.s.a.5)*100
+
+b.p.g.5=(c(b.g.smal.5,b.g.med.5,b.g.lar.5,b.g.x.larg.5)/b.s.g.5)*100
+
+
+
+
+############################################################
+############################################################
+############################################################
+############################################################
+###################DELFIM MOREIRA BARTIRA###################
+
+#############
+###Limpeza dados
+#############
+dads.arau.fb<- dads.bio.fb[dads.bio.fb$Gen=="Araucaria",]#separa araucária
+dads.podo.fb<- dads.bio.fb[dads.bio.fb$Gen=="Podocarpus",]#separa podocarpus
+dads.gim.fb=rbind (dads.arau.fb,dads.podo.fb)
+dads.ang.fb<- dads.bio.fb[dads.bio.fb$Gen!="Araucaria",]#Retirand arauc
+dads.ang.fb<- dads.ang.fb[dads.ang.fb$Gen!="Podocarpus",]#retirando podo
+dads.ang.fb<- dads.ang.fb[dads.ang.fb$Gen!="Cyathea",]#retirando podo
+#tail (dads.ang.fb)
+
+#############################################################
+##########################classes DAP########################
+
+
+clas_gim_fb.10<-dads.gim.fb [dads.gim.fb$DAP<10,]
+g.smal.6=length(clas_gim_fb.10$DAP)
+clas_gim_fb.10.30<-dads.gim.fb [dads.gim.fb$DAP>=10 & dads.gim.fb$DAP<30,]
+g.med.6=length(clas_gim_fb.10.30$DAP)
+clas_gim_fb.30.50<-dads.gim.fb [dads.gim.fb$DAP>=30 & dads.gim.fb$DAP<50,]
+g.lar.6=length(clas_gim_fb.30.50$DAP)
+clas_gim_fb.50<-dads.gim.fb [dads.gim.fb$DAP>=50,]
+g.x.larg.6=length(clas_gim_fb.50$DAP)
+
+clas_ang_fb.10<-dads.ang.fb [dads.ang.fb$DAP<10,]
+smal.6=length(clas_ang_fb.10$DAP)
+clas_ang_fb.10.30<-dads.ang.fb [dads.ang.fb$DAP>=10 & dads.ang.fb$DAP<30,]
+med.6=length(clas_ang_fb.10.30$DAP)
+clas_ang_fb.30.50<-dads.ang.fb [dads.ang.fb$DAP>=30 & dads.ang.fb$DAP<50,]
+lar.6=length(clas_ang_fb.30.50$DAP)
+clas_ang_fb.50<-dads.ang.fb [dads.ang.fb$DAP>=50,]
+x.lar.6=length(clas_ang_fb.50$DAP)
+s.a.6=sum(smal.6,med.6,lar.6,x.lar.6)
+s.g.6=sum(g.smal.6,g.med.6,g.lar.6,g.x.larg.6)
+p.a.6=(c(smal.6,med.6,lar.6,x.lar.6)/s.a.6)*100
+p.g.6=(c(g.smal.6,g.med.6,g.lar.6,g.x.larg.6)/s.g.6)*100
+a.b.a.6=sum(dads.ang.fb$DAP)
+a.b.g.6=sum(dads.gim.fb$DAP)
+(c(a.b.a.6,a.b.g.6)/sum(a.b.a.6,a.b.g.6))*100
+
+
+############################################################
+############################################################
+############################################################
+##Est.Altura
+#Ang
+#weibull
+a=27.188
+b=0.091
+c.1=0.738
+D.6=dads.ang.fb$DAP
+x.6=dads.ang.fb$DAP
+dads.ang.fb$Alt.E= a*(1-exp(-b*(D.6^c.1)))
+#head (dads.ang.fb)
+#cor (dads.ang.fsf$Alt.E2,dads.ang.fsf$Alt)
+#cv (dads.ang.fsf$Alt)
+#range (dads.ang.fsf$Alt.E)
+
+###
+###
+#Gim
+a.g=25.9889
+b.g=19.9290
+g.D.6=dads.gim.fb$DAP
+dads.gim.fb$Alt.E = (1.3+a.g*exp(-(b.g/g.D.6)))
+#head(dads.gim.fb)
+x.g=dads.gim.fb$DAP
+
+#cor(dads.gim.fb$Alt.E,dads.gim.fb$Alt)
+#cv (dads.gim.fb$Alt.E)
+#cv(dads.gim.fb$Alt)
+
+############################################################
+############################################################
+############################################################
+##Densidade
+
+Dens.fb= getWoodDensity(genus=dads.ang.fb$Gen, 
+		species=dads.ang.fb$Spp)
+
+dads.ang.fb$DensM <- Dens.fb$meanWD
+dads.ang.fb$Lvl.D <- Dens.fb$levelWD
+write.table (dads.ang.fb,file="dads.ang.fb.csv", dec=",",col.names=TRUE)#função exporta a tabela
+dads.ang.fb =  read.table ("Dens.fb.txt" , header = TRUE,
+  sep = "\t", row.names=1,dec = ",")
+
+
+
+Dens.fb.2= getWoodDensity(genus=dads.gim.fb$Gen, 
+		species=dads.gim.fb$Spp)
+
+dads.gim.fb$DensM <- Dens.fb.2$meanWD
+dads.gim.fb$Lvl.D <- Dens.fb.2$levelWD
+#tail (Dens.cj.2)
+
+
+
+############################################################
+############################################################
+############################################################
+##Biomassa
+
+
+##Gim
+x=0.4141 #Souza e Longhi
+a= 111.7988
+b= -15.5317
+c.2= 0.8544
+d = 0.0180
+g.D.6= c(dads.gim.fb$DAP)
+H.6=c(dads.gim.fb$Alt.E)
+dads.gim.fb$biom= (x*(a+b*c(g.D.6)+c.2*c(g.D.6^2)+d*((c(g.D.6^2))*H.6)))
+#head (dads.gim.fb)
+
+
+
+
+
+##Ang
+
+dads.ang.fb$biom= (computeAGB(D=dads.ang.fb$DAP, 
+			WD=dads.ang.fb$DensM,
+			H=dads.ang.fb$Alt.E))*1000
+#head (dads.ang.fb)
+
+
+bio.fb =rbind (dads.ang.fb,dads.gim.fb)
+
+bio.temp.fb <- bio.fb [bio.fb$Distri == "Temperado",]
+bio.trop.fb <- bio.fb [bio.fb$Distri == "Tropical",]
+temp.fb=sum(bio.temp.fb$biom)
+trop.fb=sum(bio.trop.fb$biom)
+por.t.t.fb= (c(temp.fb,trop.fb)/sum(temp.fb,trop.fb)*100)
+#barplot (c(por.t.t.fb[1],por.t.t.fb[2]))
+#head (bio.trop.fb)
+
+
+######################
+######################
+######################DAP xBIO
+
+
+bio.ara.fb <- bio.fb[bio.fb$Gen=="Araucaria",]
+bio.pod.fb <- bio.fb [bio.fb$Gen == "Podocarpus",]
+bio.gim.fb=rbind (bio.ara.fb,bio.pod.fb)
+bio.ang.fb <-bio.fb[bio.fb$Gen!="Araucaria",]
+bio.ang.fb <-bio.ang.fb[bio.ang.fb$Gen!="Podocarpus",]
+#head (bio.ang.fb)
+
+
+b.clas_gim_fb.10<-bio.gim.fb [bio.gim.fb$DAP<10,]
+b.g.smal.6=sum(b.clas_gim_fb.10$biom)
+b.clas_gim_fb.10.30<-bio.gim.fb [bio.gim.fb$DAP>=10 & bio.gim.fb$DAP<30,]
+b.g.med.6=sum(b.clas_gim_fb.10.30$biom)
+b.clas_gim_fb.30.50<-bio.gim.fb [bio.gim.fb$DAP>=30 & bio.gim.fb$DAP<50,]
+b.g.lar.6=sum(b.clas_gim_fb.30.50$biom)
+b.clas_gim_fb.50<-bio.gim.fb [bio.gim.fb$DAP>=50,]
+b.g.x.larg.6=sum(b.clas_gim_fb.50$biom)
+
+b.clas_ang_fb.10<-bio.ang.fb [bio.ang.fb$DAP<10,]
+b.smal.6=sum(b.clas_ang_fb.10$biom)
+b.clas_ang_fb.10.30<-bio.ang.fb [bio.ang.fb$DAP>=10 & bio.ang.fb$DAP<30,]
+b.med.6=sum(b.clas_ang_fb.10.30$biom)
+b.clas_ang_fb.30.50<-bio.ang.fb [bio.ang.fb$DAP>=30 & bio.ang.fb$DAP<50,]
+b.lar.6=sum(b.clas_ang_fb.30.50$biom)
+b.clas_ang_fb.50<-bio.ang.fb[bio.ang.fb$DAP>=50,]
+b.x.lar.6=sum(b.clas_ang_fb.50$biom)
+
+b.s.a.6=sum(bio.ang.fb$biom)
+
+b.s.g.6=sum(bio.gim.fb$biom)
+
+b.p.a.6=(c(b.smal.6,b.med.6,b.lar.6,b.x.lar.6)/b.s.a.6)*100
+
+b.p.g.6=(c(b.g.smal.6,b.g.med.6,b.g.lar.6,b.g.x.larg.6)/b.s.g.6)*100
+
+
+
+############################################################
+############################################################
+############################################################
+############################################################
+###################BAEPENDI#################################
+
+#############
+###Limpeza dados
+#############
+dads.arau.bp<- dads.bio.bp[dads.bio.bp$Gen=="Araucaria",]#separa araucária
+dads.podo.bp<- dads.bio.bp[dads.bio.bp$Gen=="Podocarpus",]#separa podocarpus
+dads.gim.bp=rbind (dads.arau.bp,dads.podo.bp)
+dads.ang.bp<- dads.bio.bp[dads.bio.bp$Gen!="Araucaria",]#Retirand arauc
+dads.ang.bp<- dads.ang.bp[dads.ang.bp$Gen!="Podocarpus",]#retirando podo
+dads.ang.bp<- dads.ang.bp[dads.ang.bp$Gen!="Cyathea",]#retirando podo
+dads.ang.bp<- dads.ang.bp[dads.ang.bp$Gen!="Dicksonia",]#retirando podo
+
+#tail (dads.gim.bp)
+
+#############################################################
+##########################classes DAP########################
+
+
+clas_gim_bp.10<-dads.gim.bp [dads.gim.bp$DAP<10,]
+g.smal.7=length(clas_gim_bp.10$DAP)
+clas_gim_bp.10.30<-dads.gim.bp [dads.gim.bp$DAP>=10 & dads.gim.bp$DAP<30,]
+g.med.7=length(clas_gim_bp.10.30$DAP)
+clas_gim_bp.30.50<-dads.gim.bp [dads.gim.bp$DAP>=30 & dads.gim.bp$DAP<50,]
+g.lar.7=length(clas_gim_bp.30.50$DAP)
+clas_gim_bp.50<-dads.gim.bp [dads.gim.bp$DAP>=50,]
+g.x.larg.7=length(clas_gim_bp.50$DAP)
+
+clas_ang_bp.10<-dads.ang.bp [dads.ang.bp$DAP<10,]
+smal.7=length(clas_ang_bp.10$DAP)
+clas_ang_bp.10.30<-dads.ang.bp [dads.ang.bp$DAP>=10 & dads.ang.bp$DAP<30,]
+med.7=length(clas_ang_bp.10.30$DAP)
+clas_ang_bp.30.50<-dads.ang.bp [dads.ang.bp$DAP>=30 & dads.ang.bp$DAP<50,]
+lar.7=length(clas_ang_bp.30.50$DAP)
+clas_ang_bp.50<-dads.ang.bp [dads.ang.bp$DAP>=50,]
+x.lar.7=length(clas_ang_bp.50$DAP)
+s.a.7=sum(smal.7,med.7,lar.7,x.lar.7)
+s.g.7=sum(g.smal.7,g.med.7,g.lar.7,g.x.larg.7)
+p.a.7=(c(smal.7,med.7,lar.7,x.lar.7)/s.a.7)*100
+p.g.7=(c(g.smal.7,g.med.7,g.lar.7,g.x.larg.7)/s.g.7)*100
+a.b.a.7=sum(dads.ang.bp$DAP)
+a.b.g.7=sum(dads.gim.bp$DAP)
+(c(a.b.a.7,a.b.g.7)/sum(a.b.a.7,a.b.g.7))*100
+
+
+############################################################
+############################################################
+############################################################
+##Est.Altura
+#Ang
+#weibull
+a=27.188
+b=0.091
+c.1=0.738
+D.7=dads.ang.bp$DAP
+x.7=dads.ang.bp$DAP
+dads.ang.bp$Alt.E= a*(1-exp(-b*(D.7^c.1)))
+head (dads.ang.bp)
+#cor (dads.ang.bp$Alt.E,dads.ang.bp$Alt)
+#cv (dads.ang.bp$Alt.E)
+#range (dads.ang.bp$Alt.E)
+
+###
+###
+#Gim
+a.g=25.9889
+b.g=19.9290
+g.D.7=dads.gim.bp$DAP
+dads.gim.bp$Alt.E = (1.3+a.g*exp(-(b.g/g.D.7)))
+#head(dads.gim.bp)
+
+#cor(dads.gim.bp$Alt.E,dads.gim.bp$Alt)
+#cv (dads.gim.bp$Alt.E)
+#cv(dads.gim.bp$Alt)
+
+############################################################
+############################################################
+############################################################
+##Densidade
+
+Dens.bp= getWoodDensity(genus=dads.ang.bp$Gen, 
+		species=dads.ang.bp$Spp)
+
+dads.ang.bp$DensM <- Dens.bp$meanWD
+dads.ang.bp$Lvl.D <- Dens.bp$levelWD
+write.table (dads.ang.bp,file="dads.ang.bp.csv", dec=",",col.names=TRUE)#função exporta a tabela
+dads.ang.bp =  read.table ("Dens.bp.txt" , header = TRUE,
+  sep = "\t", row.names=1,dec = ",")
+
+#head (dads.ang.bp)
+
+
+Dens.bp.2= getWoodDensity(genus=dads.gim.bp$Gen, 
+		species=dads.gim.bp$Spp)
+
+dads.gim.bp$DensM <- Dens.bp.2$meanWD
+dads.gim.bp$Lvl.D <- Dens.bp.2$levelWD
+#tail (Dens.cj.2)
+
+
+
+############################################################
+############################################################
+############################################################
+##Biomassa
+
+
+##Gim
+x=0.4141 #Souza e Longhi
+a= 111.7988
+b= -15.5317
+c.2= 0.8544
+d = 0.0180
+g.D.7= c(dads.gim.bp$DAP)
+H.7=c(dads.gim.bp$Alt.E)
+dads.gim.bp$biom= (x*(a+b*c(g.D.7)+c.2*c(g.D.7^2)+d*((c(g.D.7^2))*H.7)))
+#head (dads.gim.bp)
+##Ang
+
+dads.ang.bp$biom= (computeAGB(D=dads.ang.bp$DAP, 
+			WD=dads.ang.bp$DensM,
+			H=dads.ang.bp$Alt.E))*1000
+#head (dads.ang.bp)
+
+
+bio.bp =rbind (dads.ang.bp,dads.gim.bp)
+
+bio.temp.bp <- bio.bp [bio.bp$Distri == "Temperado",]
+bio.trop.bp <- bio.bp [bio.bp$Distri == "Tropical",]
+temp.bp=sum(bio.temp.bp$biom)
+trop.bp=sum(bio.trop.bp$biom)
+por.t.t.bp=(c(temp.bp,trop.bp)/sum(trop.bp,temp.bp)*100)
+#barplot (c(por.t.t.bp[1],por.t.t.bp[2]))
+#range (bio.bp$biom)
+#sum (bio.bp$biom)
+
+
+######################
+######################
+######################DAP xBIO
+
+
+bio.ara.bp <- bio.bp[bio.bp$Gen=="Araucaria",]
+bio.pod.bp <- bio.fb [bio.bp$Gen == "Podocarpus",]
+bio.gim.bp=rbind (bio.ara.bp,bio.pod.fb)
+bio.ang.bp <-bio.bp[bio.bp$Gen!="Araucaria",]
+bio.ang.bp <-bio.ang.bp[bio.ang.bp$Gen!="Podocarpus",]
+#head (bio.ang.bp)
+
+
+b.clas_gim_bp.10<-bio.gim.bp [bio.gim.bp$DAP<10,]
+b.g.smal.7=sum(b.clas_gim_bp.10$biom)
+b.clas_gim_bp.10.30<-bio.gim.bp [bio.gim.bp$DAP>=10 & bio.gim.bp$DAP<30,]
+b.g.med.7=sum(b.clas_gim_bp.10.30$biom)
+b.clas_gim_bp.30.50<-bio.gim.bp [bio.gim.bp$DAP>=30 & bio.gim.bp$DAP<50,]
+b.g.lar.7=sum(b.clas_gim_bp.30.50$biom)
+b.clas_gim_bp.50<-bio.gim.bp [bio.gim.bp$DAP>=50,]
+b.g.x.larg.7=sum(b.clas_gim_fb.50$biom)
+
+b.clas_ang_bp.10<-bio.ang.bp [bio.ang.bp$DAP<10,]
+b.smal.7=sum(b.clas_ang_bp.10$biom)
+b.clas_ang_bp.10.30<-bio.ang.bp [bio.ang.bp$DAP>=10 & bio.ang.bp$DAP<30,]
+b.med.7=sum(b.clas_ang_bp.10.30$biom)
+b.clas_ang_bp.30.50<-bio.ang.fb [bio.ang.bp$DAP>=30 & bio.ang.bp$DAP<50,]
+b.lar.7=sum(b.clas_ang_bp.30.50$biom)
+b.clas_ang_bp.50<-bio.ang.bp[bio.ang.bp$DAP>=50,]
+b.x.lar.7=sum(b.clas_ang_bp.50$biom)
+
+b.s.a.7=sum(bio.ang.bp$biom)
+
+b.s.g.7=sum(bio.gim.bp$biom)
+
+b.p.a.7=(c(b.smal.7,b.med.7,b.lar.7,b.x.lar.7)/b.s.a.7)*100
+
+b.p.g.7=(c(b.g.smal.7,b.g.med.7,b.g.lar.7,b.g.x.larg.7)/b.s.g.7)*100
+
+############################################################
+############################################################
+############################################################
+######################GRÁFICOS##############################
+###DAP class porcentagem ind
+
+setwd("C:/Users/Pedro/Dropbox/Mestrado/DAdos/Gráficos")
+jpeg(filename = "Classe DAP_ind.jpg", width = 850, height = 500, # função salva gráficos em .jpg
+     units = "px", quality = 75, 
+     bg = "white", restoreConsole = TRUE)
+
+par(mfrow=c(2,4),mar=c(5,5,2,2), cex.axis=1.3, cex.lab=1.5, mgp=c(3,1.3,0.3),	
+family="serif",las=1, tcl=0.3)
+
+
+barplot (c(p.a[1],p.g[1],p.a[2],p.g[2],p.a[3],p.g[3],p.a[4],p.g[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,70),ylab="Indivíduos (%)", main="Campos do Jordão")#cj
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+barplot (c(p.a.2[1],p.g.2[1],p.a.2[2],p.g.2[2],
+p.a.2[3],p.g.2[3],p.a.2[4],p.g.2[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,70), main="Bananal")#ba
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+
+barplot (c(p.a.3[1],p.g.3[1],p.a.3[2],p.g.3[2],p.a.3[3],p.g.3[3],
+		p.a.3[4],p.g.3[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,70), main="Barra do Chapéu")#bc
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+barplot (c(p.a.4[1],p.g.4[1],p.a.4[2],p.g.4[2],p.a.4[3],p.g.4[3]
+,p.a.4[4],p.g.4[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,70),main="Itaberá",xlab="Classe DAP (cm)")#it
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+
+
+barplot (c(p.a.5[1],p.g.5[1],p.a.5[2],p.g.5[2],p.a.5[3],
+p.g.5[3],p.a.5[4],p.g.5[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,70),ylab="Indivíduos (%)", xlab="Classe DAP (cm)",
+main="Delfim Moreira \n Faz. São Fran.")#fsf
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+
+barplot (c(p.a.6[1],p.g.6[1],p.a.6[2],p.g.6[2],p.a.6[3],
+p.g.6[3],p.a.6[4],p.g.6[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,70),xlab="Classe DAP (cm)",
+main="Delfim Moreira \n Faz. Bart.")#fb
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+
+
+barplot (c(p.a.7[1],p.g.7[1],p.a.7[2],p.g.7[2],p.a.7[3],
+p.g.7[3],p.a.7[4],p.g.7[4]),
+col=rep(c("grey80","grey51"),8),ylim=c(0,70),xlab="Classe DAP (cm)",
+main="Baependi")#bp
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+dev.off()
+
+########################################
+########################################
+###DAP Class porcentage BIO
+
+
+jpeg(filename = "Classe DAP_biomas.jpg", width = 850, height = 500, # função salva gráficos em .jpg
+     units = "px", quality = 75, 
+     bg = "white", restoreConsole = TRUE)
+
+par(mfrow=c(2,4),mar=c(5,5,2,2), cex.axis=1.3, cex.lab=1.5, mgp=c(3,1.3,0.3),	
+family="serif",las=1, tcl=0.3)
+
+
+barplot (c(b.p.a[1],b.p.g[1],b.p.a[2],b.p.g[2],b.p.a[3],b.p.g[3],b.p.a[4],b.p.g[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,100),ylab="Biomassa (%)", main="Campos do Jordão")#cj
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+barplot (c(b.p.a.2[1],b.p.g.2[1],b.p.a.2[2],b.p.g.2[2],
+b.p.a.2[3],b.p.g.2[3],b.p.a.2[4],b.p.g.2[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,100), main="Bananal")#ba
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+
+barplot (c(b.p.a.3[1],b.p.g.3[1],b.p.a.3[2],b.p.g.3[2],b.p.a.3[3],b.p.g.3[3],
+		b.p.a.3[4],b.p.g.3[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,100), main="Barra do Chapéu")#bc
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+barplot (c(b.p.a.4[1],b.p.g.4[1],b.p.a.4[2],b.p.g.4[2],b.p.a.4[3],b.p.g.4[3]
+,b.p.a.4[4],b.p.g.4[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,100),main="Itaberá",xlab="Classe DAP (cm)")#it
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+
+
+barplot (c(b.p.a.5[1],b.p.g.5[1],b.p.a.5[2],b.p.g.5[2],b.p.a.5[3],
+b.p.g.5[3],b.p.a.5[4],b.p.g.5[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,100),ylab="Biomassa (%)", xlab="Classe DAP (cm)",
+main="Delfim Moreira \n Faz. São Fran.")#fsf
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+
+barplot (c(b.p.a.6[1],b.p.g.6[1],b.p.a.6[2],b.p.g.6[2],b.p.a.6[3],
+b.p.g.6[3],b.p.a.6[4],b.p.g.6[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,100),xlab="Classe DAP (cm)",
+main="Delfim Moreira \n Faz. Bart.")#fb
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+
+
+barplot (c(b.p.a.7[1],b.p.g.7[1],b.p.a.7[2],b.p.g.7[2],b.p.a.7[3],
+b.p.g.7[3],b.p.a.7[4],b.p.g.7[4]),
+col=rep(c("grey80","grey51"),8),ylim=c(0,100),xlab="Classe DAP (cm)",
+main="Baependi")#bp
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+dev.off()
+
+
+
+
+
+
+##########################
+###
+### bio gmin/ arauc
+
+dads.ara.cj<- dads.gim.cj [dads.gim.cj$Gen!="Podocarpus",]
+dads.pod.cj<- dads.gim.cj [dads.gim.cj$Gen!="Araucaria",]
+
+dads.ara.fb<- dads.gim.fb [dads.gim.fb$Gen!="Podocarpus",]
+
+dads.ara.fsf<- dads.gim.fsf [dads.gim.fsf$Gen!="Podocarpus",]
+
+dads.ara.bp<- dads.gim.bp [dads.gim.bp$Gen!="Podocarpus",]
+
+dads.pod.cj<- dads.gim.cj [dads.gim.cj$Gen!="Araucaria",]
+
+dads.pod.fb<- dads.gim.fb [dads.gim.fb$Gen!="Araucaria",]
+
+dads.pod.fsf<- dads.gim.fsf [dads.gim.fsf$Gen!="Araucaria",]
+
+dads.pod.bp<- dads.gim.bp [dads.gim.bp$Gen!="Araucaria",]
+
+sum(dads.gim.bp$biom/0.5)
+sum(c(sum(dads.ara.bp$biom)/1000,sum(dads.pod.bp$biom)/1000))/0.5
+
+bio.podo.ara = data.frame(
+CJ_SP=c(sum(dads.ara.cj$biom)/1000,sum (dads.pod.cj$biom)/1000),
+
+BC_SP=c(sum(dads.gim.bc$biom)/1000,0),
+
+IT_SP=c(sum(dads.gim.it$biom)/1000,0),
+
+FSF_MG=c(sum(dads.ara.fsf$biom)/1000,sum(dads.pod.fsf$biom)/1000),
+
+FB_MG=c(sum(dads.ara.fb$biom)/1000,sum(dads.pod.fb$biom)/1000),
+
+BP_MG=(c(sum(dads.ara.bp$biom)/1000,sum(dads.pod.bp$biom)/1000))/0.5,
+
+BA_SP=c((sum(dads.gim.ba$biom)/1000)/0.83,0))
+
+jpeg(filename = "biomas_arau__xpodo.jpg", width = 800, height = 650, # função salva gráficos em .jpg
+     units = "px", quality = 75,
+     bg = "white", restoreConsole = TRUE)
+
+par(mar=c(3,6,2,2), cex.axis=1.3, cex.lab=1.5,	
+family="serif",las=1, tcl=0.3)
+
+rownames(bio.podo.ara) <- c("Araucaria","Podocarpus")
+colnames (bio.podo.ara)<- c("Campos \n do Jordão","Barra \n do Chapéu",
+					"Itaberá","Delfim Moreira \n Faz. São Fran.",
+					"Delfim Moreira \n Faz. Bart.","Baependi","Bananal")
+
+bio.gim= as.matrix (bio.podo.ara)
+barplot (bio.gim, col=c("grey61","grey85"), ylim=c(0,200), ylab=expression(Mg%.%ha^-1))
+
+jpeg(filename = "biomas_arau__xpodo.jpg", width = 850, height = 650, # função salva gráficos em .jpg
+     units = "px", quality = 75,
+     bg = "white", restoreConsole = TRUE)
+
+par(mar=c(5,5,2,2), cex.axis=1.2, cex.lab=1.5,	
+family="serif",las=1, tcl=0.3, mgp=c(3,1.5,0))
+
+rownames(bio.podo.ara) <- c("Araucaria","Podocarpus")
+colnames (bio.podo.ara)<- c("Campos \n do Jordão","Barra \n do Chapéu",
+					"Itaberá","Delfim Moreira \n Faz. São Fran.",
+					"Delfim Moreira \n Faz. Bart.","Baependi","Bananal")
+
+bio.gim= as.matrix (bio.podo.ara)
+barplot (bio.gim, col=c("grey61","grey85"), ylim=c(0,200),
+ ylab=expression(Mg%.%ha^-1))
+
+
+chisq.test (bio.gim)
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Araucaria","Podocarpus") #texto a ser escrito
+	,col=c("grey61","grey85")
+	,cex=2		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n")
+
+dev.off()
+
+
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Araucaria","Podocarpus") #texto a ser escrito
+	,col=c("grey61","grey85")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n")
+
+dev.off()
+
+
+########################################################################
+######bio_tempxtrop
+######bio_geral
+
+dads.antrop.cj<- dads.ang.cj [dads.ang.cj$Distri=="Tropical",]
+dads.antem.cj<- dads.ang.cj [dads.ang.cj$Distri=="Temperado",]
+
+dads.antrop.ba<- dads.ang.ba [dads.ang.ba$Distri=="Tropical",]
+dads.antem.ba<- dads.ang.ba [dads.ang.ba$Distri=="Temperado",]
+dads.antrop.ba=rbind(dads.antrop.ba,dads.palm.ba)
+
+dads.antrop.bc<- dads.ang.bc [dads.ang.bc$Distri=="Tropical",]
+dads.antrop.bc=rbind(dads.antrop.bc,dads.palm.bc)
+#head (dads.ang.bc)
+dads.antem.bc<- dads.ang.bc [dads.ang.bc$Distri=="Temperado",]
+
+dads.antrop.it<- dads.ang.it [dads.ang.it$Distri=="Tropical",]
+dads.antem.it<- dads.ang.it [dads.ang.it$Distri=="Temperado",]
+dads.antrop.it=rbind(dads.antrop.it,dads.palm.it)
+
+
+dads.antrop.fsf<- dads.ang.fsf [dads.ang.fsf$Distri=="Tropical",]
+dads.antem.fsf<- dads.ang.fsf [dads.ang.fsf$Distri=="Temperado",]
+
+
+dads.antrop.fb<- dads.ang.fb [dads.ang.fb$Distri=="Tropical",]
+dads.antem.fb<- dads.ang.fb [dads.ang.fb$Distri=="Temperado",]
+
+
+dads.antrop.bp<- dads.ang.bp [dads.ang.bp$Distri=="Tropical",]
+dads.antem.bp<- dads.ang.bp [dads.ang.bp$Distri=="Temperado",]
+
+
+
+
+bio.tem.trop = data.frame(
+CJ_SP=c(sum(dads.antrop.cj$biom)/1000,sum(dads.antem.cj$biom)/1000,
+		sum(dads.ara.cj$biom)/1000,sum (dads.pod.cj$biom)/1000),
+
+BC_SP=c(sum(dads.antrop.bc$biom)/1000,sum(dads.antem.bc$biom)/1000,
+sum(dads.gim.bc$biom)/1000,0),
+
+IT_SP=c(sum(dads.antrop.it$biom)/1000,sum(dads.antem.it$biom)/1000,
+	sum(dads.gim.it$biom)/1000,0	),
+
+FSF_MG=c(sum(dads.antrop.fsf$biom)/1000,sum(dads.antem.fsf$biom)/1000,
+	sum(dads.ara.fsf$biom)/1000,sum(dads.pod.fsf$biom)/1000),
+
+FB_MG=c(sum(dads.antrop.fb$biom)/1000,sum(dads.antem.fb$biom)/1000,
+		sum(dads.ara.fb$biom)/1000,sum(dads.pod.fb$biom)/1000),
+
+BP_MG=(c(c(sum(dads.antrop.bp$biom)/1000,sum(dads.antem.bp$biom)/1000,
+		sum(dads.ara.bp$biom)/1000,sum(dads.pod.bp$biom)/1000))/0.5)-0.7446348,
+
+BA_SP=(c(sum(dads.antrop.ba$biom)/1000,sum(dads.antem.ba$biom)/1000,
+	sum(dads.gim.ba$biom)/1000,0))/0.83)
+
+bio.tem.trop.pro = data.frame(
+CJ_SP=c(sum(dads.antrop.cj$biom)/sum(bio.cj$biom)*100,sum(dads.antem.cj$biom)/sum(bio.cj$biom)*100,
+	sum(dads.ara.cj$biom)/sum(bio.cj$biom)*100,sum(dads.pod.cj$biom)/sum(bio.cj$biom)*100),
+
+
+BC_SP=c(sum(dads.antrop.bc$biom)/sum(bio.bc$biom)*100,sum(dads.antem.bc$biom)/sum(bio.bc$biom)*100,
+	sum(dads.gim.bc$biom)/sum(bio.bc$biom)*100,0),
+
+IT_SP=c(sum(dads.antrop.it$biom)/sum(bio.it$biom)*100,sum(dads.antem.it$biom)/sum(bio.it$biom)*100,
+	sum(dads.gim.it$biom)/sum(bio.it$biom)*100,0),
+
+FSF_MG=c(sum(dads.antrop.fsf$biom)/sum(bio.fsf$biom)*100,sum(dads.antem.fsf$biom)/sum(bio.fsf$biom)*100,
+	sum(dads.ara.fsf$biom)/sum(bio.fsf$biom)*100,sum(dads.pod.fsf$biom)/sum(bio.fsf$biom)*100),
+
+FB_MG=c(sum(dads.antrop.fb$biom)/sum(bio.fb$biom)*100,sum(dads.antem.fb$biom)/sum(bio.fb$biom)*100,
+	sum(dads.ara.fb$biom)/sum(bio.fb$biom)*100,sum(dads.pod.fb$biom)/sum(bio.fb$biom)*100),
+
+BP_MG=c(sum(dads.antrop.bp$biom)/sum(bio.bp$biom)*100,sum(dads.antem.bp$biom)/sum(bio.bp$biom)*100,
+	sum(dads.ara.bp$biom)/sum(bio.bp$biom)*100,sum(dads.pod.bp$biom)/sum(bio.bp$biom)*100),
+
+
+BA_SP=c(sum(dads.antrop.ba$biom)/sum(bio.ba$biom)*100,sum(dads.antem.ba$biom)/sum(bio.ba$biom)*100,
+	sum(dads.gim.ba$biom)/sum(bio.ba$biom)*100,0))
+
+
+
+sum (bio.tem.trop$BA_SP)
+
+sum (bio.tem.trop.pro$IT_SP[1])
+
+chisq.test (bio.tem.trop)
+chisq.test (bio.tem.trop.pro)
+
+ang=sum(bio.temp.trop[c(1,2),])
+gim=sum(bio.temp.trop[c(1,2),])
+anova (ang,gim)
+med=mean (bio.temp.trop)
+dbio=bio.temp.trop-med
+dqbio=dbio^2
+sqbio=sum(dqbio)
+
+jpeg(filename = "biomas_temp__xtrop.jpg", width = 800, height = 1200, # função salva gráficos em .jpg
+     units = "px", quality = 75,
+     bg = "white", restoreConsole = TRUE)
+
+par(mfrow=c(2,1),mar=c(3,5,2,2), cex.axis=1, cex.lab=1.5, mgp=c(3.5,1.6,0),	
+family="serif",las=1, tcl=0.3)
+
+rownames(bio.tem.trop) <- c("Ang. Tropical","Agn.Temperada","Araucaria","Podocarpus")
+colnames(bio.tem.trop) <- c("Campos do Jordão","Barra \n do Chapéu",
+					"Itaberá","Delfim Moreira \n Faz. São Fran.",
+					"Delfim Moreira \n Faz. Bart.","Baependi","Bananal")
+bio.temp.trop= as.matrix (bio.tem.trop)
+barplot (bio.temp.trop, col=c ("grey89","grey71","grey51","grey35"
+,rep(c("grey89","grey71","grey51"),2),
+rep(c("grey89","grey71","grey51","grey35"),2),
+"grey89","grey71","grey51",
+"grey89","grey71","grey51","grey35"),
+	ylim=c(0,350), ylab=expression(Mg%.%ha^-1))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Ang. Tropical","Ang.Temperada","Araucaria","Podocarpus") #texto a ser escrito
+	,col=c("grey89","grey71","grey51","grey35")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n")
+
+rownames(bio.tem.trop.pro) <- c("Ang. Tropical","Agn.Temperada","Araucaria","Podocarpus")
+colnames(bio.tem.trop.pro) <- c("Campos do Jordão","Barra \n do Chapéu",
+					"Itaberá","Delfim Moreira \n Faz. São Fran.",
+					"Delfim Moreira \n Faz. Bart.","Baependi","Bananal")
+bio.tem.trop.pro= as.matrix (bio.tem.trop.pro)
+
+barplot (bio.tem.trop.pro, col=c ("grey89","grey71","grey51","grey35"
+,rep(c("grey89","grey71","grey51"),2),
+rep(c("grey89","grey71","grey51","grey35"),2),
+"grey89","grey71","grey51",
+"grey89","grey71","grey51","grey35"),
+	ylim=c(0,120), ylab="Biomassa (%)")
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Ang. Tropical","Ang.Temperada","Araucaria","Podocarpus") #texto a ser escrito
+	,col=c("grey89","grey71","grey51","grey35")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n")
+
+
+dev.off()
+
+######################################
+#####################################
+#prop. arauc. podo
+
+
+bio.podo.ara.pro = data.frame(
+CJ_SP=c((sum(dads.ara.cj$biom)/sum(bio.cj$biom))*100,(sum (dads.pod.cj$biom)/sum(bio.cj$biom))*100),
+
+BC_SP=c((sum(dads.gim.bc$biom)/sum(bio.bc$biom))*100,0),
+
+IT_SP=c((sum(dads.gim.it$biom)/sum(bio.it$biom))*100,0),
+
+FSF_MG=c((sum(dads.ara.fsf$biom)/sum(bio.fsf$biom))*100,(sum(dads.pod.fsf$biom)/sum(bio.fsf$biom))*100),
+
+FB_MG=c((sum(dads.ara.fb$biom)/sum(bio.fb$biom))*100,(sum(dads.pod.fb$biom)/sum(bio.fb$biom))*100),
+
+
+BP_MG=c((sum(dads.ara.bp$biom)/sum(bio.bp$biom))*100,(sum(dads.pod.bp$biom)/sum(bio.bp$biom))*100),
+
+BA_SP=c((sum(dads.gim.ba$biom)/sum(bio.ba$biom))*100,0))
+
+rownames(bio.podo.ara.pro) <- c("Araucaria","Podocarpus")
+colnames(bio.podo.ara.pro) <- c("Campos  \n do Jordão","Barra \n do Chapéu",
+					"Itaberá","Delfim Moreira \n Faz. São Fran.",
+					"Delfim Moreira \n Faz. Bart.","Baependi","Bananal")
+
+bio.podo.ara.pro= as.matrix (bio.podo.ara.pro)
+
+
+jpeg(filename = "biomas_arau__podo_prop.jpg", width = 900, height = 600, # função salva gráficos em .jpg
+     units = "px", quality = 75,
+     bg = "white", restoreConsole = TRUE)
+
+par(mar=c(3,5,2,2), cex.axis=1.3, cex.lab=1.5, mgp=c(3.5,1.6,0),	
+family="serif",las=1, tcl=0.3)
+
+
+barplot (bio.podo.ara.pro, col=c("grey61","grey85"), ylim=c(0,100),
+ylab="%")
+
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Araucaria", "Podocarpus") #texto a ser escrito
+	,col=c("grey61","grey85")
+	,cex=2		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+dev.off()
+
+summary (bio.cj$biom/1000)
+
+
+########################################################################################################
+
+########################################################################################################
+
+########################################################################################################
+					#POR SUA CONTA EM RISCO#
+########################################################################################################
+
+
+###Boxplot densidade
+jpeg(filename = "Bxp_dens.jpg", width = 800, height = 650, # função salva gráficos em .jpg
+     units = "px", quality = 75,
+     bg = "white", restoreConsole = TRUE)
+
+par(mar=c(3,6,2,2), cex.axis=1.3, cex.lab=1.5,	
+family="serif",las=1, tcl=0.3, xaxt="n")
+
+
+boxplot (bio.cj$DensM ,bio.bc$DensM ,bio.it$DensM, bio.fsf$DensM ,bio.fb$DensM ,bio.bp$DensM
+		,bio.ba$DensM)
+
+#View(bio.bc)
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("Campos \n do Jordão", "Barra do \n Chapéu","Itaberá", "Delfim Moreira \n Faz. São Fran.",
+	"Delfim Moreira \n Faz. Bart.", "Baependi", "Bananal"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1,2,3,4,5,6,7))
+dev.off()
+
+###################
+##boxplot biomass
+
+jpeg(filename = "Bxp_bio.jpg", width = 800, height = 650, # função salva gráficos em .jpg
+     units = "px", quality = 75,
+     bg = "white", restoreConsole = TRUE)
+
+par(mar=c(3,6,2,2), cex.axis=1.3, cex.lab=1.5,	
+family="serif",las=1, tcl=0.3, xaxt="n")
+
+boxplot (log(bio.cj$biom),log(bio.bc$biom),log(bio.it$biom) ,
+log(bio.fsf$biom) ,log(bio.fb$biom) ,log(bio.bp$biom),log(bio.ba$biom))
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("Campos \n do Jordão", "Barra do \n Chapéu","Itaberá", "Delfim Moreira \n Faz. São Fran.",
+	"Delfim Moreira \n Faz. Bart.", "Baependi", "Bananal"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1,2,3,4,5,6,7))
+dev.off()
+
+
+
+range (bio.fsf$biom)
+range (bio.fb$biom)
+range (bio.cj$biom)
+range (bio.bc$biom)
+range (bio.ba$biom)
+range (bio.it$biom)
+range (bio.bp$biom)
+
+sort (bio.bc)
+order(bio.bc)
+
+View (bio.bc)
+range (bio.fsf$DAP)
+range (bio.fb$DAP)
+range (bio.cj$DAP)
+range (bio.bc$DAP)
+range (bio.ba$DAP)
+range (bio.it$DAP)
+range (bio.bp$DAP)
+
+
+b=bio.bc[order(bio.bc$DAP, decreasing=TRUE), ] 
+head (b)
+b=bio.cj[order(bio.cj$biom, decreasing=TRUE), ] 
+head (b)
+
+
+sum (bio.cj$biom)
+sum (bio.fsf$biom)
+sum (bio.fb$biom)
+sum (bio.bp$biom)/0.5
+sum (bio.it$biom)
+sum (bio.bc$biom)
+
+
+# No caso, ordena de acordo por w em ordem alfabética inversa, 
+#x em ordem alfabética e y em ordem decrescente. 
+#Se quiser que tudo seja na mesma ordem, basta um TRUE ou FALSE, 
+#que valerá para todos.
+
