@@ -14,49 +14,8 @@ return(coef)}
 dir()
 
 
-dads.bio.cj =  read.table ("BIOMASSA cj.txt", header = TRUE,
+dads.bio =  read.table ("file.txt", header = TRUE,
  sep = "\t", row.names=1, dec = ",")
-
-dads.bio.ba =  read.table ("BIOMASSA Ba.txt" , header = TRUE,
- sep = "\t", row.names=1, dec = ",")
-
-dads.bio.bc =  read.table ("BIOMASSA Bc.txt" , header = TRUE,
- sep = "\t", row.names=1,dec = ",")
-
-dads.bio.it =  read.table ("BIOMASSA It.txt" , header = TRUE,
- sep = "\t", row.names=1, dec = ",")
-
-
-dads.bio.fb =  read.table ("BIOMASSA fbD.txt" , header = TRUE,
- sep = "\t", row.names=1, dec = ",")
-
-dads.bio.fsf =  read.table ("BIOMASSA fsfD.txt" , header = TRUE,
- sep = "\t", row.names=1, dec = ",")
-
-dads.bio.bp =  read.table ("BIOMASSA Bp.txt" , header = TRUE,
- sep = "\t", row.names=1, dec = ",")
-
-dir()
-c=100
-#head(dads.bio.ba)
-#length(dads.bio.ba$Alt)
-#length(dads.bio.ba$DAP)
-
-####CALCULAR DAP A PARTIR DE PAP OU CAP######
-#################IMPORTANTE##################
-dads.bio.ba$DAP= c(dads.bio.ba$D)*c
-dads.bio.bc$DAP= c(dads.bio.bc$D)*c
-dads.bio.it$DAP= c(dads.bio.it$D)*c
-dads.bio.cj$DAP= c(dads.bio.cj$D)*c
-dads.bio.fb$DAP= c(dads.bio.fb$D)*c
-dads.bio.fsf$DAP= c(dads.bio.fsf$D)*c
-dads.bio.bp$DAP= c(dads.bio.bp$D)*c
-
-############################################################
-############################################################
-############################################################
-############################################################
-#####################CAMPOS DO JORDÃO#######################
 
 #############
 ###Limpeza dados
@@ -105,6 +64,7 @@ a.b.g=sum(dads.gim.cj$DAP)
 ##Est.Altura
 #Ang
 #weibull
+#
 a=27.188
 b=0.091
 c.1=0.738
@@ -119,6 +79,7 @@ dads.ang.cj$Alt.E= a*(1-exp(-b*(D.1^c.1)))
 ###
 ###
 #Gim
+#
 a.g=25.9889
 b.g=19.9290
 g.D.1=dads.gim.cj$DAP
