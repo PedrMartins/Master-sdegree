@@ -16,11 +16,20 @@ pkg <- pkg[!pkg%in%installed.packages()]
 install.packages ("pkg")
 ################################################################################
 ################################################################################
-
+dir ()
 ##########
 #espécies e localidades
 dads.np =  read.table ("Ma_ab_sp_rare.txt", header = TRUE,
  sep = "\t", row.names=1, dec = ",")#dados de campos do jordão, Bananal, barra do chapeu, Itabera
+#
+dads.TD =  read.table ("Similaridade floristica TUDO.txt", header = TRUE,
+ sep = "\t", row.names=1, dec = ",")#dados de campos do jordão, Bananal, barra do chapeu, Itabera
+dads.TD[is.na(dads.TD)] <- 0
+dads.TD= t(dads.TD)
+dim (dads.TD)
+View (dads.TD)
+
+#
 dim(dads.np)
 #retirando Ba e ipiranga (PRipi)
 dim (dads.np)
@@ -98,9 +107,10 @@ tax=read.table("Diver_tax.txt"  , header = TRUE,
 sep = "\t", row.names=1)
 taxdis <- taxa2dist(tax, varstep=TRUE)
 
-as.matrix(taxdis)
-View (as.matrix(taxdis))
-plot(hclust(taxdis), hang = -1)
+#as.matrix(taxdis)
+#View (as.matrix(taxdis))
+#x11()
+#plot(hclust(taxdis), hang = -1)
 
 #p=vegdist (dads.sp)
 #plot(hclust(p, method="average"), hang=-1)
@@ -116,7 +126,11 @@ rowSums (dads.np)
 #View (tax)
 labels <- as.factor(rownames(dads.np))
 n<- length(labels)
-D.T <- taxondive(dads.np, taxdis)
+D.T <-taxondive(dads.np, taxdis)
+plot (D.T$Species,D.T$D)
+with(D.T, text(Species-.4, D-.1, as.character(rownames(dads.np)),
+pos = 4, cex = 0.8))
+
 write.table (D.T, "distax.txt")
 #summary (D.T)
 #D.T [,c(1:7)]
@@ -169,8 +183,19 @@ dads.sp= decostand (dads.np, 			#função padroniza dados de contagem
 					#outra padronização é a escalarização completa 
 					#ou ranging "range" no R
 					#formula yi'= yi – ymin/ymax – ymin
-		logbase=2)		#Argumento para base log do método "log"
+		logbase=10)		#Argumento para base log do método "log"
 
+#
+stand.sp= decostand (dads.TD, 			#função padroniza dados de contagem
+		method="log",	#argumento para escolha da padronização
+					# interessante utilizar log +1 "log"
+					#Calculo de logb(x)+1, onde b é a base e x a matriz
+					#outra padronização é a escalarização completa 
+					#ou ranging "range" no R
+					#formula yi'= yi – ymin/ymax – ymin
+		logbase=10)		#Argumento para base log do método "log"
+head (stand.sp)
+#
 mat.env =	decostand (dads.env, 			#função padroniza dados de contagem
 		method="range")	#argumento para escolha da padronização
 
@@ -194,16 +219,32 @@ mat.env =	decostand (dads.env, 			#função padroniza dados de contagem
 
 
 ####NMDS spp x parcela
-
+#Points são os scores do NMDS?
 (dads.Nmds <-metaMDS (dads.sp,			#argumento para os dados
 				distance= "bray", #argumento define distancia
 				trace=FALSE,	
 				engine="monoMDS",	#argumento define qual método de nmds será usado
-				k=2,#argumento sobre as dimensões do nmds
+				k=3,#argumento sobre as dimensões do nmds
 				binary=FALSE, 
 				wascore=TRUE))#argumento indica que a matriz é de PxA
+str (dads.Nmds)
+dim(stand.sp)
+ordiplot (dads.Nmds, type="t", dis= "sites")
+#View (dads.TD)
+loc=c(rep("Serra Mant", 4), "Sul SP",rep("Serra Mant", 2),rep("PR", 39)
+	,rep("RS", 29),rep("SC", 134),"Sul SP",rep("Serra Mant",2))
 
-plot (dads.Nmds, type="t", dis="site")
+
+#d.loc=data.frame (loc)
+#dim(d.loc)
+#View (d.loc)
+
+cor= colorRampPalette(c("darkblue","lightblue"))
+#cor (5)
+
+ordihull(dads.Nmds, groups=loc, col=cor(5),
+draw="polygon", label=TRUE, alpha=120)#função para 
+
 s=envfit (dads.Nmds,mat.env)
 plot (s)
 # função retorna dados do ordenação alem de 
@@ -290,13 +331,13 @@ par (mfrow=c(1,1)#divisão janela gráfica direira da virgula divide por linha
 setwd("C:/Users/Pedro/Dropbox/Mestrado/Dados/Gráficos")
 
 #DCA
-jpeg(filename = "Gráfica&DCA1_Taxdis.jpg", width = 850, height = 500, # função salva gráficos em .jpg
+jpeg(filename = "Gráfica&DCA1.jpg", width = 500, height = 500, # função salva gráficos em .jpg
      units = "px", quality = 75,
      bg = "white", restoreConsole = TRUE)
 
 ###parâmetros gráficos
 
-par (mfrow=c(1,2)#divisão janela gráfica direira da virgula divide por linha
+par (mfrow=c(1,1)#divisão janela gráfica direira da virgula divide por linha
 			# esquerda por coluna
 	,mar = c(5,5,2,1)# margem
 	, cex.axis=1.5 # tamanho fonte eixos
@@ -313,10 +354,10 @@ par (mfrow=c(1,2)#divisão janela gráfica direira da virgula divide por linha
 #View(data.frame("SP"=names(dads.sp),"Abrev"=n.abrev,"DCA1"=DCA.dads$cproj[,1]))
 n.abrev = make.cepnames(names(dads.sp)) #função abrevia nomes em latim para sp
 names=names (dads.sp)
-Nxsig=data.frame (names, n.abrev)
-View (Nxsig)
-write.table (Nxsig, "siglas.csv",
- sep = "\t", dec=",") #melhorar
+#Nxsig=data.frame (names, n.abrev)
+#View (Nxsig)
+#write.table (Nxsig, "siglas.csv",
+# sep = "\t", dec=",") #melhorar
 s.col= colSums (dads.sp)#função soma as colunas
 ordiplot (DCA.sp, type ="n", xlim=c(-3.5,4),ylim=c(-3,3)) #plota um gráfico do DCA vazio
 gra.DCA = orditorp(DCA.sp # objeto com o DCA
@@ -375,24 +416,44 @@ legend("topright",c("Plan.Paranaense","Mantiqueira"), cex=1,bty="n",
 pch=20,col=c("salmon2","paleturquoise1"))
 
 
-text(-3,4 #função adiciona um texto ao gráfico, 
-			#arg 1º define a localização, usa-se a função locator para
-			#adicionar de uma forma interativa
-	,"a" #texto a ser escrito
-	,cex=1.2		#tamanho da fonte
-	, family = "mono") #tipo da fonte
-
+#text(-3,4 #função adiciona um texto ao gráfico, 
+#			#arg 1º define a localização, usa-se a função locator para
+#			#adicionar de uma forma interativa
+#	,"a" #texto a ser escrito
+#	,cex=1.2		#tamanho da fonte
+#	, family = "mono") #tipo da fonte
+#
 
 #View(data.frame(table (names(dads.pxa))))
 #sort(s.col,decr=TRUE )# soma das colunas em ordem crescente
 #View (dads.pxa)
 
-
+dev.off()
 
 ##taxon distinctiness
 
+
+jpeg(filename = "Taxdis.jpg", width = 500, height = 500, # função salva gráficos em .jpg
+     units = "px", quality = 75,
+     bg = "white", restoreConsole = TRUE)
+
+###parâmetros gráficos
+
+par (mfrow=c(1,1)#divisão janela gráfica direira da virgula divide por linha
+			# esquerda por coluna
+	,mar = c(5,5,2,1)# margem
+	, cex.axis=1.5 # tamanho fonte eixos
+	, cex.lab=2 #tamanho fonte legenda
+	, cex.main=2.5 #tamanho fonte título
+	,family="mono"# fonte da letra
+	, las=1,# orientação dos números eixo y
+	tcl=0.3# orientação traços do eixo
+	,mgp=c(3,0.3,0))# distância do titulo, legenda e linha
+
+
+
 cor= c(rep("gray11",3),rep("gray57",2),rep("gray11",4),rep("gray57",5))
-plot(D.T,pch=19,cex = 1.7, col=cor,xlim = c(min(D.T$Species)-25,max(D.T$Species))+25,
+plot(D.T,pch=19,cex = 1.7, col=cor,xlim = c(min(D.T$Species)-30,max(D.T$Species))+30,
 ylim = c(min(D.T$EDplus-D.T$sd.Dplus*2)-1,max(D.T$sd.Dplus*2+D.T$EDplus)+1))
 with(D.T, text(Species-.4, Dplus-.1, as.character(rownames(dads.np)),
 pos = 4, cex = 0.8))
@@ -401,20 +462,20 @@ legend("topright",c("Plan.Paranaense","Mantiqueira"), cex=1,bty="n",
 pch=20,col=c("grey 57","grey 11"))
 
 
-text(43,99 #função adiciona um texto ao gráfico, 
-			#arg 1º define a localização, usa-se a função locator para
-			#adicionar de uma forma interativa
-	,"b" #texto a ser escrito
-	,cex=1.2		#tamanho da fonte
-	, family = "mono") #tipo da fonte
-
+#text(43,99 #função adiciona um texto ao gráfico, 
+#			#arg 1º define a localização, usa-se a função locator para
+#			#adicionar de uma forma interativa
+#	,"b" #texto a ser escrito
+#	,cex=1.2		#tamanho da fonte
+#	, family = "mono") #tipo da fonte
+#
 dev.off()
 ################################
 
 
 setwd("C:/Users/Pedro/Dropbox/Mestrado/Dados/Gráficos")
 
-#DCA
+#CCA
 jpeg(filename = "Gráfica&CCA.jpg", width = 750, height = 500, # função salva gráficos em .jpg
      units = "px", quality = 75,
      bg = "white", restoreConsole = TRUE)
@@ -440,7 +501,7 @@ par (mfrow=c(1,1)#divisão janela gráfica direira da virgula divide por linha
 #View(data.frame("SP"=names(dads.sp),"Abrev"=n.abrev,"DCA1"=DCA.dads$cproj[,1]))
 #n.abrev = make.cepnames(names(dads.sp)) #função abrevia nomes em latim para sp
 #s.col= colSums (dads.sp)#função soma as colunas
-ordiplot (CCA.sp, type ="t", dis="site", xlim=c(-1.5,1.5), ylim=c(-2,2)) #plota um gráfico do DCA vazio
+ordiplot (CCA.sp, type ="t", dis="site", xlim=c(-1.5,1.5), ylim=c(-2,2), cex=) #plota um gráfico do DCA vazio
 #gra.DCA = orditorp(DCA.sp # objeto com o DCA
 #		, dis = "sp"# display só para espécies
 #		, lab=n.abrev # etiqueta com os nomes abreviados
@@ -541,7 +602,9 @@ par (mfrow=c(1,2)#divisão janela gráfica direira da virgula divide por linha
 #NMDS spp x parcela
 #View(dads.sp)
 
-ordiplot(dads.Nmds$points, type = "t", xlim=c(-1.3,1),ylim=c(-0.8,0.7)) # gráfico de ordenação NMDS
+ordiplot(dads.Nmds$points, type = "t", 
+xlim=c(-1.3,1),ylim=c(-0.8,0.7), cex=0.8,
+choices=c(1,2)) # gráfico de ordenação NMDS
 #pont= as.data.frame(dads.Nmds$points)
 #xrange.ns<-range(pont[,1])
 #yrange.ns<-range(pont[,2])
@@ -584,6 +647,12 @@ ordihull(dads.Nmds, groups=loc, draw="polygon", col=cor, label=FALSE, alpha=120)
 legend("topright",c("Plan. Paranaense","Mantiqueira"), cex=1,bty="n",
 pch=20,col=c("salmon2","paleturquoise1"))
 
+
+###############ADD curva de nível no gráfico de NMDS#########################
+#elev= c(14.1,16,16,18.2,19.8,14.1,14.2,14.2,14.2,16.8,18.5,18.5,16.7,17.6)
+#ordisurf(dads.Nmds,elev,main="",col="black", add=TRUE)
+x11()
+#############################################################################
 
 text(-0.9,-1.4 #função adiciona um texto ao gráfico, 
 			#arg 1º define a localização, usa-se a função locator para
