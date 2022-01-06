@@ -1,4 +1,3 @@
-#####Testes Biomassa
 ######para saber como escrever expressões 
 ######matemáticas no R dentro da função
 ######expression ()
@@ -14,8 +13,65 @@ return(coef)}
 dir()
 
 
-dads.bio =  read.table ("file.txt", header = TRUE,
+dads.bio.cj =  read.table ("BIOMASSA cj.txt", header = TRUE,
  sep = "\t", row.names=1, dec = ",")
+
+colnames (dads.bio.cj)<- c("Amost","D","Alt","vol","Gen","Spp","Distri","Filo")
+head(dads.bio.cj)
+
+#dads.bio.ba =  read.table ("BIOMASSA Ba.txt" , header = TRUE,
+# sep = "\t", row.names=1, dec = ",")
+
+#colnames (dads.bio.cj)<- c("Amost","D","Alt","vol","Gen","Spp","Distri","Filo")
+
+
+dads.bio.bc =  read.table ("BIOMASSA Bc.txt" , header = TRUE,
+ sep = "\t", row.names=1,dec = ",")
+
+colnames (dads.bio.bc)<- c("Amost","D","Alt","vol","Gen","Spp","Distri","Filo")
+
+
+dads.bio.it =  read.table ("BIOMASSA It.txt" , header = TRUE,
+ sep = "\t", row.names=1, dec = ",")
+
+colnames (dads.bio.it)<- c("Amost","D","Alt","vol","Gen","Spp","Distri","Filo")
+
+dads.bio.fb =  read.table ("BIOMASSA fbD.txt" , header = TRUE,
+ sep = "\t", row.names=1, dec = ",")
+
+colnames (dads.bio.fb)<- c("Amost","D","Alt","vol","Gen","Spp","Distri","Filo")
+
+dads.bio.fsf =  read.table ("BIOMASSA fsfD.txt" , header = TRUE,
+ sep = "\t", row.names=1, dec = ",")
+
+colnames (dads.bio.fsf)<- c("Amost","D","Alt","vol","Gen","Spp","Distri","Filo")
+
+dads.bio.bp =  read.table ("BIOMASSA Bp.txt" , header = TRUE,
+ sep = "\t", row.names=1, dec = ",")
+
+colnames (dads.bio.bp)<- c("Amost","D","Alt","vol","Gen","Spp","Distri","Filo")
+
+dir()
+c=100
+#head(dads.bio.ba)
+#length(dads.bio.ba$Alt)
+#length(dads.bio.ba$DAP)
+
+####CALCULAR DAP A PARTIR DE PAP OU CAP######
+#################IMPORTANTE##################
+dads.bio.ba$DAP= c(dads.bio.ba$D)*c
+dads.bio.bc$DAP= c(dads.bio.bc$D)*c
+dads.bio.it$DAP= c(dads.bio.it$D)*c
+dads.bio.cj$DAP= c(dads.bio.cj$D)*c
+dads.bio.fb$DAP= c(dads.bio.fb$D)*c
+dads.bio.fsf$DAP= c(dads.bio.fsf$D)*c
+dads.bio.bp$DAP= c(dads.bio.bp$D)*c
+
+############################################################
+############################################################
+############################################################
+############################################################
+#####################CAMPOS DO JORDÃO#######################
 
 #############
 ###Limpeza dados
@@ -64,7 +120,6 @@ a.b.g=sum(dads.gim.cj$DAP)
 ##Est.Altura
 #Ang
 #weibull
-#
 a=27.188
 b=0.091
 c.1=0.738
@@ -79,7 +134,6 @@ dads.ang.cj$Alt.E= a*(1-exp(-b*(D.1^c.1)))
 ###
 ###
 #Gim
-#
 a.g=25.9889
 b.g=19.9290
 g.D.1=dads.gim.cj$DAP
@@ -105,6 +159,8 @@ write.table (dads.ang.cj,file="dads.ang.cj.csv", dec=",",col.names=TRUE)#funçã
 
 dads.ang.cj =  read.table ("dens.cj.txt", header = TRUE,
  sep = "\t", row.names=1, dec = ",")
+
+dads.ang.cj=
 
 #head (dads.ang.cj )
 Dens.cj.2= getWoodDensity(genus=dads.gim.cj$Gen, 
@@ -139,6 +195,8 @@ dads.ang.cj$biom= (computeAGB(D=dads.ang.cj$DAP,
 			WD=dads.ang.cj$DensM,
 			H=dads.ang.cj$Alt.E))*1000
 head (dads.gim.cj)
+head (dads.ang.cj)
+
 
 bio.cj =rbind (dads.ang.cj,dads.gim.cj)
 
@@ -1390,7 +1448,7 @@ jpeg(filename = "Classe DAP_ind.jpg", width = 850, height = 500, # função salv
      units = "px", quality = 75, 
      bg = "white", restoreConsole = TRUE)
 
-par(mfrow=c(2,4),mar=c(5,5,2,2), cex.axis=1.3, cex.lab=1.5, mgp=c(3,1.3,0.3),	
+par(mfrow=c(2,3),mar=c(5,5,2,2), cex.axis=1.3, cex.lab=1.5, mgp=c(3,1.3,0.3),	
 family="serif",las=1, tcl=0.3)
 
 
@@ -1412,9 +1470,53 @@ legend("topright" #função adiciona um texto ao gráfico,
 	, pch=c(15,15)
 	,bty = "n") #tipo da fonte
 
-barplot (c(p.a.2[1],p.g.2[1],p.a.2[2],p.g.2[2],
-p.a.2[3],p.g.2[3],p.a.2[4],p.g.2[4]),
-col=rep(c("grey80","grey51"),8), ylim=c(0,70), main="Bananal")#ba
+barplot (c(p.a.5[1],p.g.5[1],p.a.5[2],p.g.5[2],p.a.5[3],
+p.g.5[3],p.a.5[4],p.g.5[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,70),
+main="Delfim Moreira \n Faz. São Fran.")#fsf
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+
+barplot (c(p.a.6[1],p.g.6[1],p.a.6[2],p.g.6[2],p.a.6[3],
+p.g.6[3],p.a.6[4],p.g.6[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,70),
+main="Delfim Moreira \n Faz. Bart.")#fb
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+
+
+barplot (c(p.a.7[1],p.g.7[1],p.a.7[2],p.g.7[2],p.a.7[3],
+p.g.7[3],p.a.7[4],p.g.7[4]),ylab="Indivíduos (%)",
+col=rep(c("grey80","grey51"),8),ylim=c(0,70),xlab="Classe DAP (cm)",
+main="Baependi")#bp
 
 mtext( #função plota textos nas áreas ao redor do gráfico
 	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
@@ -1433,7 +1535,7 @@ legend("topright" #função adiciona um texto ao gráfico,
 
 
 barplot (c(p.a.3[1],p.g.3[1],p.a.3[2],p.g.3[2],p.a.3[3],p.g.3[3],
-		p.a.3[4],p.g.3[4]),
+		p.a.3[4],p.g.3[4]),xlab="Classe DAP (cm)",
 col=rep(c("grey80","grey51"),8), ylim=c(0,70), main="Barra do Chapéu")#bc
 
 mtext( #função plota textos nas áreas ao redor do gráfico
@@ -1470,72 +1572,36 @@ legend("topright" #função adiciona um texto ao gráfico,
 	, pch=c(15,15)
 	,bty = "n") #tipo da fonte
 
-
-
-barplot (c(p.a.5[1],p.g.5[1],p.a.5[2],p.g.5[2],p.a.5[3],
-p.g.5[3],p.a.5[4],p.g.5[4]),
-col=rep(c("grey80","grey51"),8), ylim=c(0,70),ylab="Indivíduos (%)", xlab="Classe DAP (cm)",
-main="Delfim Moreira \n Faz. São Fran.")#fsf
-
-mtext( #função plota textos nas áreas ao redor do gráfico
-	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
-	side= 1, #argumento localiza no gráfico "1" abaixo
-	cex=1,line=0.9,
-	at=c(1.4,3.5,6,8.5))
-
-legend("topright" #função adiciona um texto ao gráfico, 
-			#arg 1º define a localização, usa-se a função locator para
-			#adicionar de uma forma interativa
-	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
-	,col=c("grey80","grey51")
-	,cex=1.3		#tamanho da fonte
-	, pch=c(15,15)
-	,bty = "n") #tipo da fonte
-
-
-barplot (c(p.a.6[1],p.g.6[1],p.a.6[2],p.g.6[2],p.a.6[3],
-p.g.6[3],p.a.6[4],p.g.6[4]),
-col=rep(c("grey80","grey51"),8), ylim=c(0,70),xlab="Classe DAP (cm)",
-main="Delfim Moreira \n Faz. Bart.")#fb
-
-mtext( #função plota textos nas áreas ao redor do gráfico
-	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
-	side= 1, #argumento localiza no gráfico "1" abaixo
-	cex=1,line=0.9,
-	at=c(1.4,3.5,6,8.5))
-
-legend("topright" #função adiciona um texto ao gráfico, 
-			#arg 1º define a localização, usa-se a função locator para
-			#adicionar de uma forma interativa
-	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
-	,col=c("grey80","grey51")
-	,cex=1.3		#tamanho da fonte
-	, pch=c(15,15)
-	,bty = "n") #tipo da fonte
-
-
-
-barplot (c(p.a.7[1],p.g.7[1],p.a.7[2],p.g.7[2],p.a.7[3],
-p.g.7[3],p.a.7[4],p.g.7[4]),
-col=rep(c("grey80","grey51"),8),ylim=c(0,70),xlab="Classe DAP (cm)",
-main="Baependi")#bp
-
-mtext( #função plota textos nas áreas ao redor do gráfico
-	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
-	side= 1, #argumento localiza no gráfico "1" abaixo
-	cex=1,line=0.9,
-	at=c(1.4,3.5,6,8.5))
-
-legend("topright" #função adiciona um texto ao gráfico, 
-			#arg 1º define a localização, usa-se a função locator para
-			#adicionar de uma forma interativa
-	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
-	,col=c("grey80","grey51")
-	,cex=1.3		#tamanho da fonte
-	, pch=c(15,15)
-	,bty = "n") #tipo da fonte
-
 dev.off()
+
+
+########################################
+
+########################################
+
+########################################
+
+
+barplot (c(p.a.2[1],p.g.2[1],p.a.2[2],p.g.2[2],
+p.a.2[3],p.g.2[3],p.a.2[4],p.g.2[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,70), main="Bananal")#ba
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+
 
 ########################################
 ########################################
@@ -1546,7 +1612,7 @@ jpeg(filename = "Classe DAP_biomas.jpg", width = 850, height = 500, # função s
      units = "px", quality = 75, 
      bg = "white", restoreConsole = TRUE)
 
-par(mfrow=c(2,4),mar=c(5,5,2,2), cex.axis=1.3, cex.lab=1.5, mgp=c(3,1.3,0.3),	
+par(mfrow=c(2,3),mar=c(5,5,2,2), cex.axis=1.3, cex.lab=1.5, mgp=c(3,1.3,0.3),	
 family="serif",las=1, tcl=0.3)
 
 
@@ -1568,9 +1634,55 @@ legend("topright" #função adiciona um texto ao gráfico,
 	, pch=c(15,15)
 	,bty = "n") #tipo da fonte
 
-barplot (c(b.p.a.2[1],b.p.g.2[1],b.p.a.2[2],b.p.g.2[2],
-b.p.a.2[3],b.p.g.2[3],b.p.a.2[4],b.p.g.2[4]),
-col=rep(c("grey80","grey51"),8), ylim=c(0,100), main="Bananal")#ba
+
+
+barplot (c(b.p.a.5[1],b.p.g.5[1],b.p.a.5[2],b.p.g.5[2],b.p.a.5[3],
+b.p.g.5[3],b.p.a.5[4],b.p.g.5[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,100),
+main="Delfim Moreira \n Faz. São Fran.")#fsf
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+
+barplot (c(b.p.a.6[1],b.p.g.6[1],b.p.a.6[2],b.p.g.6[2],b.p.a.6[3],
+b.p.g.6[3],b.p.a.6[4],b.p.g.6[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,100),
+main="Delfim Moreira \n Faz. Bart.")#fb
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+
+
+barplot (c(b.p.a.7[1],b.p.g.7[1],b.p.a.7[2],b.p.g.7[2],b.p.a.7[3],
+b.p.g.7[3],b.p.a.7[4],b.p.g.7[4]),
+col=rep(c("grey80","grey51"),8),ylim=c(0,100),ylab="Biomassa (%)", xlab="Classe DAP (cm)",
+main="Baependi")#bp
 
 mtext( #função plota textos nas áreas ao redor do gráfico
 	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
@@ -1589,7 +1701,7 @@ legend("topright" #função adiciona um texto ao gráfico,
 
 
 barplot (c(b.p.a.3[1],b.p.g.3[1],b.p.a.3[2],b.p.g.3[2],b.p.a.3[3],b.p.g.3[3],
-		b.p.a.3[4],b.p.g.3[4]),
+		b.p.a.3[4],b.p.g.3[4]), xlab="Classe DAP (cm)",
 col=rep(c("grey80","grey51"),8), ylim=c(0,100), main="Barra do Chapéu")#bc
 
 mtext( #função plota textos nas áreas ao redor do gráfico
@@ -1617,72 +1729,7 @@ mtext( #função plota textos nas áreas ao redor do gráfico
 	cex=1,line=0.9,
 	at=c(1.4,3.5,6,8.5))
 
-legend("topright" #função adiciona um texto ao gráfico, 
-			#arg 1º define a localização, usa-se a função locator para
-			#adicionar de uma forma interativa
-	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
-	,col=c("grey80","grey51")
-	,cex=1.3		#tamanho da fonte
-	, pch=c(15,15)
-	,bty = "n") #tipo da fonte
-
-
-
-barplot (c(b.p.a.5[1],b.p.g.5[1],b.p.a.5[2],b.p.g.5[2],b.p.a.5[3],
-b.p.g.5[3],b.p.a.5[4],b.p.g.5[4]),
-col=rep(c("grey80","grey51"),8), ylim=c(0,100),ylab="Biomassa (%)", xlab="Classe DAP (cm)",
-main="Delfim Moreira \n Faz. São Fran.")#fsf
-
-mtext( #função plota textos nas áreas ao redor do gráfico
-	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
-	side= 1, #argumento localiza no gráfico "1" abaixo
-	cex=1,line=0.9,
-	at=c(1.4,3.5,6,8.5))
-
-legend("topright" #função adiciona um texto ao gráfico, 
-			#arg 1º define a localização, usa-se a função locator para
-			#adicionar de uma forma interativa
-	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
-	,col=c("grey80","grey51")
-	,cex=1.3		#tamanho da fonte
-	, pch=c(15,15)
-	,bty = "n") #tipo da fonte
-
-
-barplot (c(b.p.a.6[1],b.p.g.6[1],b.p.a.6[2],b.p.g.6[2],b.p.a.6[3],
-b.p.g.6[3],b.p.a.6[4],b.p.g.6[4]),
-col=rep(c("grey80","grey51"),8), ylim=c(0,100),xlab="Classe DAP (cm)",
-main="Delfim Moreira \n Faz. Bart.")#fb
-
-mtext( #função plota textos nas áreas ao redor do gráfico
-	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
-	side= 1, #argumento localiza no gráfico "1" abaixo
-	cex=1,line=0.9,
-	at=c(1.4,3.5,6,8.5))
-
-legend("topright" #função adiciona um texto ao gráfico, 
-			#arg 1º define a localização, usa-se a função locator para
-			#adicionar de uma forma interativa
-	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
-	,col=c("grey80","grey51")
-	,cex=1.3		#tamanho da fonte
-	, pch=c(15,15)
-	,bty = "n") #tipo da fonte
-
-
-
-barplot (c(b.p.a.7[1],b.p.g.7[1],b.p.a.7[2],b.p.g.7[2],b.p.a.7[3],
-b.p.g.7[3],b.p.a.7[4],b.p.g.7[4]),
-col=rep(c("grey80","grey51"),8),ylim=c(0,100),xlab="Classe DAP (cm)",
-main="Baependi")#bp
-
-mtext( #função plota textos nas áreas ao redor do gráfico
-	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
-	side= 1, #argumento localiza no gráfico "1" abaixo
-	cex=1,line=0.9,
-	at=c(1.4,3.5,6,8.5))
-
-legend("topright" #função adiciona um texto ao gráfico, 
+legend("topleft" #função adiciona um texto ao gráfico, 
 			#arg 1º define a localização, usa-se a função locator para
 			#adicionar de uma forma interativa
 	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
@@ -1692,6 +1739,34 @@ legend("topright" #função adiciona um texto ao gráfico,
 	,bty = "n") #tipo da fonte
 
 dev.off()
+
+
+########################################
+
+########################################
+
+########################################
+
+
+
+barplot (c(b.p.a.2[1],b.p.g.2[1],b.p.a.2[2],b.p.g.2[2],
+b.p.a.2[3],b.p.g.2[3],b.p.a.2[4],b.p.g.2[4]),
+col=rep(c("grey80","grey51"),8), ylim=c(0,100), main="Bananal")#ba
+
+mtext( #função plota textos nas áreas ao redor do gráfico
+	c("0-10", "10-30","30-50", ">50"), #primeiro argumento refere oa texto plotado
+	side= 1, #argumento localiza no gráfico "1" abaixo
+	cex=1,line=0.9,
+	at=c(1.4,3.5,6,8.5))
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Angiosperma", "Gimnosperma") #texto a ser escrito
+	,col=c("grey80","grey51")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
 
 
 
@@ -1725,17 +1800,18 @@ sum(c(sum(dads.ara.bp$biom)/1000,sum(dads.pod.bp$biom)/1000))/0.5
 bio.podo.ara = data.frame(
 CJ_SP=c(sum(dads.ara.cj$biom)/1000,sum (dads.pod.cj$biom)/1000),
 
-BC_SP=c(sum(dads.gim.bc$biom)/1000,0),
-
-IT_SP=c(sum(dads.gim.it$biom)/1000,0),
-
 FSF_MG=c(sum(dads.ara.fsf$biom)/1000,sum(dads.pod.fsf$biom)/1000),
 
 FB_MG=c(sum(dads.ara.fb$biom)/1000,sum(dads.pod.fb$biom)/1000),
 
 BP_MG=(c(sum(dads.ara.bp$biom)/1000,sum(dads.pod.bp$biom)/1000))/0.5,
 
-BA_SP=c((sum(dads.gim.ba$biom)/1000)/0.83,0))
+BC_SP=c(sum(dads.gim.bc$biom)/1000,0),
+
+IT_SP=c(sum(dads.gim.it$biom)/1000,0))
+
+
+#BA_SP=c((sum(dads.gim.ba$biom)/1000)/0.83,0))
 
 jpeg(filename = "biomas_arau__xpodo.jpg", width = 800, height = 650, # função salva gráficos em .jpg
      units = "px", quality = 75,
@@ -1745,44 +1821,102 @@ par(mar=c(3,6,2,2), cex.axis=1.3, cex.lab=1.5,
 family="serif",las=1, tcl=0.3)
 
 rownames(bio.podo.ara) <- c("Araucaria","Podocarpus")
-colnames (bio.podo.ara)<- c("Campos \n do Jordão","Barra \n do Chapéu",
-					"Itaberá","Delfim Moreira \n Faz. São Fran.",
-					"Delfim Moreira \n Faz. Bart.","Baependi","Bananal")
+colnames (bio.podo.ara)<- c("Campos \n do Jordão","Delfim Moreira \n Faz. São Fran.",
+					"Delfim Moreira \n Faz. Bart.","Baependi","Barra \n do Chapéu",
+					"Itaberá")
 
 bio.gim= as.matrix (bio.podo.ara)
-barplot (bio.gim, col=c("grey61","grey85"), ylim=c(0,200), ylab=expression(Mg%.%ha^-1))
+barplot (bio.gim, col=c("grey61","grey85"), ylim=c(0,200), 
+ylab=expression(Mg%.%ha^-1))
 
-jpeg(filename = "biomas_arau__xpodo.jpg", width = 850, height = 650, # função salva gráficos em .jpg
+
+#####################################
+#prop. arauc. podo
+
+
+bio.podo.ara.pro = data.frame(
+CJ_SP=c((sum(dads.ara.cj$biom)/sum(bio.cj$biom))*100,(sum (dads.pod.cj$biom)/sum(bio.cj$biom))*100),
+
+FSF_MG=c((sum(dads.ara.fsf$biom)/sum(bio.fsf$biom))*100,(sum(dads.pod.fsf$biom)/sum(bio.fsf$biom))*100),
+
+FB_MG=c((sum(dads.ara.fb$biom)/sum(bio.fb$biom))*100,(sum(dads.pod.fb$biom)/sum(bio.fb$biom))*100),
+
+
+BP_MG=c((sum(dads.ara.bp$biom)/sum(bio.bp$biom))*100,(sum(dads.pod.bp$biom)/sum(bio.bp$biom))*100),
+
+BC_SP=c((sum(dads.gim.bc$biom)/sum(bio.bc$biom))*100,0),
+
+IT_SP=c((sum(dads.gim.it$biom)/sum(bio.it$biom))*100,0))
+
+rownames(bio.podo.ara.pro) <- c("Araucaria","Podocarpus")
+colnames(bio.podo.ara.pro) <- c("Campos  \n do Jordão","Delfim Moreira \n Faz. São Fran.",
+					"Delfim Moreira \n Faz. Bart.","Baependi",
+					"Barra \n do Chapéu", "Itaberá")
+
+bio.podo.ara.pro= as.matrix (bio.podo.ara.pro)
+
+
+jpeg(filename = "biomas_arau__podo_prop.jpg", width = 800, height = 950, # função salva gráficos em .jpg
      units = "px", quality = 75,
      bg = "white", restoreConsole = TRUE)
 
-par(mar=c(5,5,2,2), cex.axis=1.2, cex.lab=1.5,	
-family="serif",las=1, tcl=0.3, mgp=c(3,1.5,0))
+par(mfrow=c(2,1), mar=c(3,5,2,2), cex.axis=1.3, cex.lab=1.5, mgp=c(3.5,1.6,0),	
+family="serif",las=1, tcl=0.3)
+
+
+barplot (bio.podo.ara.pro, col=c("grey31","grey77"), ylim=c(0,100),ylab="Biomassa %")
+
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Araucaria", "Podocarpus") #texto a ser escrito
+	,col=c("grey31","grey77")
+	,cex=1.5		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n") #tipo da fonte
+
+text(0.5,95 #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,"a" #texto a ser escrito
+	,cex=1.2		#tamanho da fonte
+	, family = "mono") #tipo da fonte
+
+
 
 rownames(bio.podo.ara) <- c("Araucaria","Podocarpus")
-colnames (bio.podo.ara)<- c("Campos \n do Jordão","Barra \n do Chapéu",
-					"Itaberá","Delfim Moreira \n Faz. São Fran.",
-					"Delfim Moreira \n Faz. Bart.","Baependi","Bananal")
+colnames (bio.podo.ara)<- c("Campos \n do Jordão","Delfim Moreira \n Faz. São Fran.",
+					"Delfim Moreira \n Faz. Bart.","Baependi","Barra \n do Chapéu",
+					"Itaberá")
 
 bio.gim= as.matrix (bio.podo.ara)
-barplot (bio.gim, col=c("grey61","grey85"), ylim=c(0,200),
+barplot (bio.gim, col=c("grey31","grey77"), ylim=c(0,250),
  ylab=expression(Mg%.%ha^-1))
 
 
-chisq.test (bio.gim)
+chisq.test (bio.gim[2,])
 
 legend("topright" #função adiciona um texto ao gráfico, 
 			#arg 1º define a localização, usa-se a função locator para
 			#adicionar de uma forma interativa
 	,c("Araucaria","Podocarpus") #texto a ser escrito
-	,col=c("grey61","grey85")
-	,cex=2		#tamanho da fonte
+	,col=c("grey31","grey77")
+	,cex=1.5		#tamanho da fonte
 	, pch=c(15,15)
 	,bty = "n")
 
+text(0.5,245 #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,"b" #texto a ser escrito
+	,cex=1.2		#tamanho da fonte
+	, family = "mono") #tipo da fonte
+
+
+
+
 dev.off()
-
-
 
 legend("topright" #função adiciona um texto ao gráfico, 
 			#arg 1º define a localização, usa-se a função locator para
@@ -1830,16 +1964,9 @@ dads.antem.bp<- dads.ang.bp [dads.ang.bp$Distri=="Temperado",]
 
 
 
-
 bio.tem.trop = data.frame(
 CJ_SP=c(sum(dads.antrop.cj$biom)/1000,sum(dads.antem.cj$biom)/1000,
 		sum(dads.ara.cj$biom)/1000,sum (dads.pod.cj$biom)/1000),
-
-BC_SP=c(sum(dads.antrop.bc$biom)/1000,sum(dads.antem.bc$biom)/1000,
-sum(dads.gim.bc$biom)/1000,0),
-
-IT_SP=c(sum(dads.antrop.it$biom)/1000,sum(dads.antem.it$biom)/1000,
-	sum(dads.gim.it$biom)/1000,0	),
 
 FSF_MG=c(sum(dads.antrop.fsf$biom)/1000,sum(dads.antem.fsf$biom)/1000,
 	sum(dads.ara.fsf$biom)/1000,sum(dads.pod.fsf$biom)/1000),
@@ -1849,20 +1976,15 @@ FB_MG=c(sum(dads.antrop.fb$biom)/1000,sum(dads.antem.fb$biom)/1000,
 
 BP_MG=(c(c(sum(dads.antrop.bp$biom)/1000,sum(dads.antem.bp$biom)/1000,
 		sum(dads.ara.bp$biom)/1000,sum(dads.pod.bp$biom)/1000))/0.5)-0.7446348,
+BC_SP=c(sum(dads.antrop.bc$biom)/1000,sum(dads.antem.bc$biom)/1000,
+sum(dads.gim.bc$biom)/1000,0),
 
-BA_SP=(c(sum(dads.antrop.ba$biom)/1000,sum(dads.antem.ba$biom)/1000,
-	sum(dads.gim.ba$biom)/1000,0))/0.83)
+IT_SP=c(sum(dads.antrop.it$biom)/1000,sum(dads.antem.it$biom)/1000,
+	sum(dads.gim.it$biom)/1000,0	))
 
 bio.tem.trop.pro = data.frame(
 CJ_SP=c(sum(dads.antrop.cj$biom)/sum(bio.cj$biom)*100,sum(dads.antem.cj$biom)/sum(bio.cj$biom)*100,
 	sum(dads.ara.cj$biom)/sum(bio.cj$biom)*100,sum(dads.pod.cj$biom)/sum(bio.cj$biom)*100),
-
-
-BC_SP=c(sum(dads.antrop.bc$biom)/sum(bio.bc$biom)*100,sum(dads.antem.bc$biom)/sum(bio.bc$biom)*100,
-	sum(dads.gim.bc$biom)/sum(bio.bc$biom)*100,0),
-
-IT_SP=c(sum(dads.antrop.it$biom)/sum(bio.it$biom)*100,sum(dads.antem.it$biom)/sum(bio.it$biom)*100,
-	sum(dads.gim.it$biom)/sum(bio.it$biom)*100,0),
 
 FSF_MG=c(sum(dads.antrop.fsf$biom)/sum(bio.fsf$biom)*100,sum(dads.antem.fsf$biom)/sum(bio.fsf$biom)*100,
 	sum(dads.ara.fsf$biom)/sum(bio.fsf$biom)*100,sum(dads.pod.fsf$biom)/sum(bio.fsf$biom)*100),
@@ -1874,8 +1996,11 @@ BP_MG=c(sum(dads.antrop.bp$biom)/sum(bio.bp$biom)*100,sum(dads.antem.bp$biom)/su
 	sum(dads.ara.bp$biom)/sum(bio.bp$biom)*100,sum(dads.pod.bp$biom)/sum(bio.bp$biom)*100),
 
 
-BA_SP=c(sum(dads.antrop.ba$biom)/sum(bio.ba$biom)*100,sum(dads.antem.ba$biom)/sum(bio.ba$biom)*100,
-	sum(dads.gim.ba$biom)/sum(bio.ba$biom)*100,0))
+BC_SP=c(sum(dads.antrop.bc$biom)/sum(bio.bc$biom)*100,sum(dads.antem.bc$biom)/sum(bio.bc$biom)*100,
+	sum(dads.gim.bc$biom)/sum(bio.bc$biom)*100,0),
+
+IT_SP=c(sum(dads.antrop.it$biom)/sum(bio.it$biom)*100,sum(dads.antem.it$biom)/sum(bio.it$biom)*100,
+	sum(dads.gim.it$biom)/sum(bio.it$biom)*100,0))
 
 
 
@@ -1902,9 +2027,9 @@ par(mfrow=c(2,1),mar=c(3,5,2,2), cex.axis=1, cex.lab=1.5, mgp=c(3.5,1.6,0),
 family="serif",las=1, tcl=0.3)
 
 rownames(bio.tem.trop) <- c("Ang. Tropical","Agn.Temperada","Araucaria","Podocarpus")
-colnames(bio.tem.trop) <- c("Campos do Jordão","Barra \n do Chapéu",
-					"Itaberá","Delfim Moreira \n Faz. São Fran.",
-					"Delfim Moreira \n Faz. Bart.","Baependi","Bananal")
+colnames(bio.tem.trop) <- c("Campos do Jordão","Delfim Moreira \n Faz. São Fran.",
+					"Delfim Moreira \n Faz. Bart.","Baependi",
+					"Barra \n do Chapéu","Itaberá")
 bio.temp.trop= as.matrix (bio.tem.trop)
 barplot (bio.temp.trop, col=c ("grey89","grey71","grey51","grey35"
 ,rep(c("grey89","grey71","grey51"),2),
@@ -1922,10 +2047,18 @@ legend("topright" #função adiciona um texto ao gráfico,
 	, pch=c(15,15)
 	,bty = "n")
 
+text(0.5,345 #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,"a" #texto a ser escrito
+	,cex=1.5		#tamanho da fonte
+	, family = "mono") #tipo da fonte
+
+
 rownames(bio.tem.trop.pro) <- c("Ang. Tropical","Agn.Temperada","Araucaria","Podocarpus")
-colnames(bio.tem.trop.pro) <- c("Campos do Jordão","Barra \n do Chapéu",
-					"Itaberá","Delfim Moreira \n Faz. São Fran.",
-					"Delfim Moreira \n Faz. Bart.","Baependi","Bananal")
+colnames(bio.tem.trop.pro) <- c("Campos do Jordão","Delfim Moreira \n Faz. São Fran.",
+					"Delfim Moreira \n Faz. Bart.","Baependi","Barra \n do Chapéu",
+					"Itaberá")
 bio.tem.trop.pro= as.matrix (bio.tem.trop.pro)
 
 barplot (bio.tem.trop.pro, col=c ("grey89","grey71","grey51","grey35"
@@ -1944,64 +2077,247 @@ legend("topright" #função adiciona um texto ao gráfico,
 	, pch=c(15,15)
 	,bty = "n")
 
+text(0.5,115 #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,"b" #texto a ser escrito
+	,cex=1.5		#tamanho da fonte
+	, family = "mono") #tipo da fonte
+
+
 
 dev.off()
 
-######################################
-#####################################
-#prop. arauc. podo
+########################################################################
+######bio_filo
+######bio_geral
+
+dads.antrop.cj<- dads.ang.cj [dads.ang.cj$Distri=="Tropical",]
+dads.antem.cj<- dads.ang.cj [dads.ang.cj$Distri=="Temperado",]
+
+dads.antrop.ba<- dads.ang.ba [dads.ang.ba$Distri=="Tropical",]
+dads.antem.ba<- dads.ang.ba [dads.ang.ba$Distri=="Temperado",]
+dads.antrop.ba=rbind(dads.antrop.ba,dads.palm.ba)
+
+dads.antrop.bc<- dads.ang.bc [dads.ang.bc$Distri=="Tropical",]
+dads.antrop.bc=rbind(dads.antrop.bc,dads.palm.bc)
+#head (dads.ang.bc)
+dads.antem.bc<- dads.ang.bc [dads.ang.bc$Distri=="Temperado",]
+
+dads.antrop.it<- dads.ang.it [dads.ang.it$Distri=="Tropical",]
+dads.antem.it<- dads.ang.it [dads.ang.it$Distri=="Temperado",]
+dads.antrop.it=rbind(dads.antrop.it,dads.palm.it)
 
 
-bio.podo.ara.pro = data.frame(
-CJ_SP=c((sum(dads.ara.cj$biom)/sum(bio.cj$biom))*100,(sum (dads.pod.cj$biom)/sum(bio.cj$biom))*100),
-
-BC_SP=c((sum(dads.gim.bc$biom)/sum(bio.bc$biom))*100,0),
-
-IT_SP=c((sum(dads.gim.it$biom)/sum(bio.it$biom))*100,0),
-
-FSF_MG=c((sum(dads.ara.fsf$biom)/sum(bio.fsf$biom))*100,(sum(dads.pod.fsf$biom)/sum(bio.fsf$biom))*100),
-
-FB_MG=c((sum(dads.ara.fb$biom)/sum(bio.fb$biom))*100,(sum(dads.pod.fb$biom)/sum(bio.fb$biom))*100),
+dads.antrop.fsf<- dads.ang.fsf [dads.ang.fsf$Distri=="Tropical",]
+dads.antem.fsf<- dads.ang.fsf [dads.ang.fsf$Distri=="Temperado",]
 
 
-BP_MG=c((sum(dads.ara.bp$biom)/sum(bio.bp$biom))*100,(sum(dads.pod.bp$biom)/sum(bio.bp$biom))*100),
-
-BA_SP=c((sum(dads.gim.ba$biom)/sum(bio.ba$biom))*100,0))
-
-rownames(bio.podo.ara.pro) <- c("Araucaria","Podocarpus")
-colnames(bio.podo.ara.pro) <- c("Campos  \n do Jordão","Barra \n do Chapéu",
-					"Itaberá","Delfim Moreira \n Faz. São Fran.",
-					"Delfim Moreira \n Faz. Bart.","Baependi","Bananal")
-
-bio.podo.ara.pro= as.matrix (bio.podo.ara.pro)
+dads.antrop.fb<- dads.ang.fb [dads.ang.fb$Distri=="Tropical",]
+dads.antem.fb<- dads.ang.fb [dads.ang.fb$Distri=="Temperado",]
 
 
-jpeg(filename = "biomas_arau__podo_prop.jpg", width = 900, height = 600, # função salva gráficos em .jpg
+dads.antrop.bp<- dads.ang.bp [dads.ang.bp$Distri=="Tropical",]
+dads.antem.bp<- dads.ang.bp [dads.ang.bp$Distri=="Temperado",]
+
+
+
+bio.tem.trop = data.frame(
+CJ_SP=c(sum(dads.antrop.cj$biom)/1000,sum(dads.antem.cj$biom)/1000,
+		sum(dads.ara.cj$biom)/1000,sum (dads.pod.cj$biom)/1000),
+
+FSF_MG=c(sum(dads.antrop.fsf$biom)/1000,sum(dads.antem.fsf$biom)/1000,
+	sum(dads.ara.fsf$biom)/1000,sum(dads.pod.fsf$biom)/1000),
+
+FB_MG=c(sum(dads.antrop.fb$biom)/1000,sum(dads.antem.fb$biom)/1000,
+		sum(dads.ara.fb$biom)/1000,sum(dads.pod.fb$biom)/1000),
+
+BP_MG=(c(c(sum(dads.antrop.bp$biom)/1000,sum(dads.antem.bp$biom)/1000,
+		sum(dads.ara.bp$biom)/1000,sum(dads.pod.bp$biom)/1000))/0.5)-0.7446348,
+BC_SP=c(sum(dads.antrop.bc$biom)/1000,sum(dads.antem.bc$biom)/1000,
+sum(dads.gim.bc$biom)/1000,0),
+
+IT_SP=c(sum(dads.antrop.it$biom)/1000,sum(dads.antem.it$biom)/1000,
+	sum(dads.gim.it$biom)/1000,0	))
+
+bio.tem.trop.pro = data.frame(
+CJ_SP=c(sum(dads.antrop.cj$biom)/sum(bio.cj$biom)*100,sum(dads.antem.cj$biom)/sum(bio.cj$biom)*100,
+	sum(dads.ara.cj$biom)/sum(bio.cj$biom)*100,sum(dads.pod.cj$biom)/sum(bio.cj$biom)*100),
+
+FSF_MG=c(sum(dads.antrop.fsf$biom)/sum(bio.fsf$biom)*100,sum(dads.antem.fsf$biom)/sum(bio.fsf$biom)*100,
+	sum(dads.ara.fsf$biom)/sum(bio.fsf$biom)*100,sum(dads.pod.fsf$biom)/sum(bio.fsf$biom)*100),
+
+FB_MG=c(sum(dads.antrop.fb$biom)/sum(bio.fb$biom)*100,sum(dads.antem.fb$biom)/sum(bio.fb$biom)*100,
+	sum(dads.ara.fb$biom)/sum(bio.fb$biom)*100,sum(dads.pod.fb$biom)/sum(bio.fb$biom)*100),
+
+BP_MG=c(sum(dads.antrop.bp$biom)/sum(bio.bp$biom)*100,sum(dads.antem.bp$biom)/sum(bio.bp$biom)*100,
+	sum(dads.ara.bp$biom)/sum(bio.bp$biom)*100,sum(dads.pod.bp$biom)/sum(bio.bp$biom)*100),
+
+
+BC_SP=c(sum(dads.antrop.bc$biom)/sum(bio.bc$biom)*100,sum(dads.antem.bc$biom)/sum(bio.bc$biom)*100,
+	sum(dads.gim.bc$biom)/sum(bio.bc$biom)*100,0),
+
+IT_SP=c(sum(dads.antrop.it$biom)/sum(bio.it$biom)*100,sum(dads.antem.it$biom)/sum(bio.it$biom)*100,
+	sum(dads.gim.it$biom)/sum(bio.it$biom)*100,0))
+
+
+
+sum (bio.tem.trop$BA_SP)
+
+sum (bio.tem.trop.pro$IT_SP[1])
+
+chisq.test (bio.tem.trop)
+chisq.test (bio.tem.trop.pro)
+
+ang=sum(bio.temp.trop[c(1,2),])
+gim=sum(bio.temp.trop[c(1,2),])
+anova (ang,gim)
+med=mean (bio.temp.trop)
+dbio=bio.temp.trop-med
+dqbio=dbio^2
+sqbio=sum(dqbio)
+
+jpeg(filename = "biomas_temp__xtrop.jpg", width = 800, height = 1200, # função salva gráficos em .jpg
      units = "px", quality = 75,
      bg = "white", restoreConsole = TRUE)
 
-par(mar=c(3,5,2,2), cex.axis=1.3, cex.lab=1.5, mgp=c(3.5,1.6,0),	
+par(mfrow=c(2,1),mar=c(3,5,2,2), cex.axis=1, cex.lab=1.5, mgp=c(3.5,1.6,0),	
 family="serif",las=1, tcl=0.3)
 
-
-barplot (bio.podo.ara.pro, col=c("grey61","grey85"), ylim=c(0,100),
-ylab="%")
-
+rownames(bio.tem.trop) <- c("Ang. Tropical","Agn.Temperada","Araucaria","Podocarpus")
+colnames(bio.tem.trop) <- c("Campos do Jordão","Delfim Moreira \n Faz. São Fran.",
+					"Delfim Moreira \n Faz. Bart.","Baependi",
+					"Barra \n do Chapéu","Itaberá")
+bio.temp.trop= as.matrix (bio.tem.trop)
+barplot (bio.temp.trop, col=c ("grey89","grey71","grey51","grey35"
+,rep(c("grey89","grey71","grey51"),2),
+rep(c("grey89","grey71","grey51","grey35"),2),
+"grey89","grey71","grey51",
+"grey89","grey71","grey51","grey35"),
+	ylim=c(0,350), ylab=expression(Mg%.%ha^-1))
 
 legend("topright" #função adiciona um texto ao gráfico, 
 			#arg 1º define a localização, usa-se a função locator para
 			#adicionar de uma forma interativa
-	,c("Araucaria", "Podocarpus") #texto a ser escrito
-	,col=c("grey61","grey85")
-	,cex=2		#tamanho da fonte
+	,c("Ang. Tropical","Ang.Temperada","Araucaria","Podocarpus") #texto a ser escrito
+	,col=c("grey89","grey71","grey51","grey35")
+	,cex=1.3		#tamanho da fonte
 	, pch=c(15,15)
-	,bty = "n") #tipo da fonte
+	,bty = "n")
+
+text(0.5,345 #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,"a" #texto a ser escrito
+	,cex=1.5		#tamanho da fonte
+	, family = "mono") #tipo da fonte
+
+
+rownames(bio.tem.trop.pro) <- c("Ang. Tropical","Agn.Temperada","Araucaria","Podocarpus")
+colnames(bio.tem.trop.pro) <- c("Campos do Jordão","Delfim Moreira \n Faz. São Fran.",
+					"Delfim Moreira \n Faz. Bart.","Baependi","Barra \n do Chapéu",
+					"Itaberá")
+bio.tem.trop.pro= as.matrix (bio.tem.trop.pro)
+
+barplot (bio.tem.trop.pro, col=c ("grey89","grey71","grey51","grey35"
+,rep(c("grey89","grey71","grey51"),2),
+rep(c("grey89","grey71","grey51","grey35"),2),
+"grey89","grey71","grey51",
+"grey89","grey71","grey51","grey35"),
+	ylim=c(0,120), ylab="Biomassa (%)")
+
+legend("topright" #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,c("Ang. Tropical","Ang.Temperada","Araucaria","Podocarpus") #texto a ser escrito
+	,col=c("grey89","grey71","grey51","grey35")
+	,cex=1.3		#tamanho da fonte
+	, pch=c(15,15)
+	,bty = "n")
+
+text(0.5,115 #função adiciona um texto ao gráfico, 
+			#arg 1º define a localização, usa-se a função locator para
+			#adicionar de uma forma interativa
+	,"b" #texto a ser escrito
+	,cex=1.5		#tamanho da fonte
+	, family = "mono") #tipo da fonte
+
+
 
 dev.off()
 
+
+
+######################################
 summary (bio.cj$biom/1000)
 
+######################################
+######################################
 
+
+dads.ara.cj<- dads.gim.cj [dads.gim.cj$Gen!="Podocarpus",]
+dads.pod.cj<- dads.gim.cj [dads.gim.cj$Gen!="Araucaria",]
+dads.antrop.cj<- dads.ang.cj [dads.ang.cj$Distri=="Tropical",]
+dads.antem.cj<- dads.ang.cj [dads.ang.cj$Distri=="Temperado",]
+
+
+clas.ara.cj10<-dads.ara.cj [dads.ara.cj$DAP<10,]
+clas.pod.cj10<-dads.pod.cj [dads.pod.cj$DAP<10,]
+clas.antrop.cj10<-dads.antrop.cj [dads.antrop.cj$DAP<10,]
+clas.antem.cj10<-dads.antem.cj [dads.antem.cj$DAP<10,]
+
+ara.smal=length(clas.ara.cj10$DAP)
+pod.smal=length(clas.pod.cj10$DAP)
+antr.smal=length(clas.antrop.cj10$DAP)
+ante.smal=length(clas.antem.cj10$DAP)
+
+clas.ara.cj10.30<-dads.ara.cj [dads.ara.cj$DAP<10 & dads.ara.cj$DAP<30,]
+clas.pod.cj10.30<-dads.pod.cj [dads.pod.cj$DAP<10 & dads.pod.cj$DAP<30,]
+clas.antrop.cj10.30<-dads.antrop.cj [dads.antrop.cj$DAP<10 & dads.antrop.cj$DAP<30,]
+clas.antem.cj10.30<-dads.antem.cj [dads.antem.cj$DAP<10 & dads.antem.cj$DAP<30,]
+
+ara.med=length(clas.ara.cj10.30$DAP)
+pod.med=length(clas.pod.cj10.30$DAP)
+ante.med=length(clas.antem.cj10.30$DAP)
+antr.med=length(clas.antrop.cj10.30$DAP)
+
+
+clas.ara.cj30.50<-dads.ara.cj[dads.ara.cj$DAP>=30 & dads.ara.cj$DAP<50,]
+clas.pod.cj30.50<-dads.pod.cj [dads.pod.cj$DAP>=30 & dads.pod.cj$DAP<50,]
+clas.antrop.cj30.50<-dads.antrop.cj [dads.antrop.cj$DAP>=30 & dads.antrop.cj$DAP<50,]
+clas.antem.cj30.50<-dads.antem.cj [dads.antem.cj$DAP>=30 & dads.antem.cj$DAP<50,]
+
+ara.lar=length(clas.ara.cj30.50$DAP)
+pod.lar=length(clas.pod.cj30.50$DAP)
+ante.lar=length(clas.antem.cj30.50$DAP)
+antr.lar=length(clas.antrop.cj30.50$DAP)
+
+
+clas.ara.cj50<-dads.ara.cj [dads.ara.cj$DAP<50,]
+clas.pod.cj50<-dads.pod.cj [dads.pod.cj$DAP<50,]
+clas.antrop.cj50<-dads.antrop.cj [dads.antrop.cj$DAP<50,]
+clas.antem.cj50<-dads.antem.cj [dads.antem.cj$DAP<50,]
+
+ara.x.lar=length(clas.ara.cj50$DAP)
+pod.x.lar=length(clas.pod.cj50$DAP)
+antr.x.lar=length(clas.antrop.cj50$DAP)
+ante.x.lar=length(clas.antem.cj50$DAP)
+
+bio.tem.trop.pro = data.frame(
+CJ_SPgim=c((ara.smal/(ara.smal+pod.smal))*100,(pod.smal/(ara.smal+pod.smal))*100),
+CJ_SPang=c((ante.smal/(ante.smal+antr.smal))*100,(antr.smal/(ante.smal+antr.smal))*100)
+)
+
+CJ_SP1=c((ara.med/(ara.med+pod.med))*100,(pod.med/(ara.med+pod.med))*100,
+(ante.med/(ante.med+antr.med))*100,(antr.med/(ante.med+antr.med))*100),
+CJ_SP2=c((ara.lar/(ara.lar+pod.lar))*100,(pod.lar/(ara.lar+pod.lar))*100,
+(ante.lar/(ante.lar+antr.lar))*100,(antr.lar/(ante.lar+antr.lar))*100),
+CJ_SP3=c((ara.x.lar/(ara.x.lar+pod.x.lar))*100,(pod.x.lar/(ara.x.lar+pod.x.lar))*100,
+(ante.x.lar/(ante.x.lar+antr.x.lar))*100,(antr.x.lar/(ante.x.lar+antr.x.lar))*100)
+)
+
+bio=as.matrix(bio.tem.trop.pro)
+barplot (bio)
 ########################################################################################################
 
 ########################################################################################################
@@ -2076,11 +2392,20 @@ range (bio.ba$DAP)
 range (bio.it$DAP)
 range (bio.bp$DAP)
 
+summary (bio.bp)
 
 b=bio.bc[order(bio.bc$DAP, decreasing=TRUE), ] 
 head (b)
 b=bio.cj[order(bio.cj$biom, decreasing=TRUE), ] 
 head (b)
+
+
+# No caso, ordena de acordo por w em ordem alfabética inversa, 
+#x em ordem alfabética e y em ordem decrescente. 
+#Se quiser que tudo seja na mesma ordem, basta um TRUE ou FALSE, 
+#que valerá para todos.
+
+
 
 
 sum (bio.cj$biom)
@@ -2090,9 +2415,30 @@ sum (bio.bp$biom)/0.5
 sum (bio.it$biom)
 sum (bio.bc$biom)
 
+summary(bio.bc)
+summary(bio.fsf)
+summary(bio.fb)
+summary(bio.bp)
+summary(bio.it)
+summary(bio.cj)
 
-# No caso, ordena de acordo por w em ordem alfabética inversa, 
-#x em ordem alfabética e y em ordem decrescente. 
-#Se quiser que tudo seja na mesma ordem, basta um TRUE ou FALSE, 
-#que valerá para todos.
+tail(bio.cj, 15)
+b.g= bio.it[bio.it$Lvl.D=="genus",]
+b.s= bio.it[bio.it$Lvl.D=="species",]
+b.p= bio.it[bio.it$Lvl.D=="Ponderada",]
+b.p= bio.it[bio.it$Lvl.D=="ponderada",]
+
+View (bio.it)
+
+length (b.g$Lvl.D)
+length (b.s$Lvl.D)
+length (b.p$Lvl.D)
+
+
+length (bio.cj$Spp)
+length (bio.bc$Spp)
+length (bio.it$Spp)
+length (bio.fb$Spp)
+length (bio.fsf$Spp)
+length (bio.bp$Spp)
 
