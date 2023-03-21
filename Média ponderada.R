@@ -16,10 +16,3 @@ meanp=function (v,w,pop,as_numeric=FALSE)	# v=variável
 	return (m_p)
 	
 }	
-
-
-
-
-library (dplyr)
-
-count
