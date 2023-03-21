@@ -128,8 +128,3 @@ autoplot(pca.temp,loadings = TRUE, loadings.colour = 'blue',
 
 autoplot(pca.prec,loadings = TRUE, loadings.colour = 'blue',
          loadings.label = TRUE, loadings.label.size = 3, type ="t")
-
-
-dir()
-
-
