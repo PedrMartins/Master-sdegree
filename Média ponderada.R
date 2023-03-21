@@ -1,4 +1,4 @@
-## função média ponderada terminar
+## função média ponderada
 meanp=function (v,w,pop,as_numeric=FALSE)	# v=variável
 						#w=peso
 						#as_numeric-> caso esteja usando a função para peso
